@@ -45,7 +45,12 @@ app.use(
       directives: {
         defaultSrc: ["'self'"],
         imgSrc: ["'self'", "data:", "blob:", "https://res.cloudinary.com"],
-        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://js.stripe.com"],
+        scriptSrc: [
+          "'self'",
+          "'unsafe-inline'",
+          "'unsafe-eval'",
+          "https://js.stripe.com",
+        ],
         frameSrc: ["'self'", "https://js.stripe.com"],
         styleSrc: ["'self'", "'unsafe-inline'"],
         connectSrc: ["'self'", "*"],
@@ -54,8 +59,6 @@ app.use(
     },
   })
 );
-
-
 
 /* ------------------ API ROUTES ------------------ */
 app.use("/api/user", userRouter);
@@ -76,10 +79,10 @@ app.use("/api/order", orderRouter);
 // app.get("*", (req, res) => {
 //   res.sendFile(path.join(clientDistPath, "index.html"));
 // });
-app.use(express.static(path.join(__dirname, "../client/dist")));
+app.use(express.static(path.join(__dirname, "/dist")));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client/dist/index.html"));
+  res.sendFile(path.join(__dirname, "/dist/index.html"));
 });
 
 /* ------------------ START SERVER ------------------ */
