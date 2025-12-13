@@ -50,29 +50,29 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
         containerRef.current.scrollLeft -= 200
     }
 
-    
 
-  
 
-  const handleRedirectProductListpage = ()=>{
-      const subcategory = subCategoryData.find(sub =>{
-        const filterData = sub.category.some(c => {
-          return c._id == id
+
+
+    const handleRedirectProductListpage = () => {
+        const subcategory = subCategoryData.find(sub => {
+            const filterData = sub.category.some(c => {
+                return c._id == id
+            })
+
+            return filterData ? true : null
         })
+        const url = `/${valideURLConvert(name)}-${id}/${valideURLConvert(subcategory?.name)}-${subcategory?._id}`
 
-        return filterData ? true : null
-      })
-      const url = `/${valideURLConvert(name)}-${id}/${valideURLConvert(subcategory?.name)}-${subcategory?._id}`
+        return url
+    }
 
-      return url
-  }
-
-  const redirectURL =  handleRedirectProductListpage()
+    const redirectURL = handleRedirectProductListpage()
     return (
         <div>
             <div className='container mx-auto p-4 flex items-center justify-between gap-4'>
-                <h3 className='font-semibold text-lg md:text-xl'>{name}</h3>
-                <Link  to={redirectURL} className='text-green-600 hover:text-green-400'>See All</Link>
+                <h3 className='font-semibold text-lg md:text-xl text-gray-900'>{name}</h3>
+                <Link to={redirectURL} className='text-green-600 hover:text-green-400'>See All</Link>
             </div>
             <div className='relative flex items-center '>
                 <div className=' flex gap-4 md:gap-6 lg:gap-8 container mx-auto px-4 overflow-x-scroll scrollbar-none scroll-smooth' ref={containerRef}>

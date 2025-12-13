@@ -31,19 +31,31 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: process.env.FRONTEND_URL || true,
+    origin: process.env.FRONTEND_URL,
   })
 );
-
 app.use(express.json());
 app.use(cookieParser());
 app.use(morgan("dev"));
-
 app.use(
   helmet({
     crossOriginResourcePolicy: false,
+    contentSecurityPolicy: {
+      useDefaults: false,
+      directives: {
+        defaultSrc: ["'self'"],
+        imgSrc: ["'self'", "data:", "blob:", "https://res.cloudinary.com"],
+        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://js.stripe.com"],
+        frameSrc: ["'self'", "https://js.stripe.com"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        connectSrc: ["'self'", "*"],
+        fontSrc: ["'self'", "data:"],
+      },
+    },
   })
 );
+
+
 
 /* ------------------ API ROUTES ------------------ */
 app.use("/api/user", userRouter);

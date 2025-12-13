@@ -43,11 +43,11 @@ const UserMenu = ({ close }) => {
   };
   return (
     <div>
-      <div className="font-semibold">My Account</div>
-      <div className="text-sm flex items-center gap-2">
-        <span className="max-w-52 text-ellipsis line-clamp-1">
+      <div className="font-bold text-xl mb-2">My Account</div>
+      <div className="text-sm flex items-center gap-2 mb-3">
+        <span className="max-w-52 text-ellipsis line-clamp-1 font-semibold">
           {user.name || user.mobile}{" "}
-          <span className="text-medium text-red-600">
+          <span className="font-medium text-red-600">
             {user.role === "ADMIN" ? "(Admin)" : ""}
           </span>
         </span>
@@ -62,12 +62,12 @@ const UserMenu = ({ close }) => {
 
       <Divider />
 
-      <div className="text-sm grid gap-1">
+      <div className="text-sm grid gap-2 mt-3 font-medium">
         {isAdmin(user.role) && (
           <Link
             onClick={handleClose}
             to={"/dashboard/category"}
-            className="px-2 hover:bg-orange-200 py-1"
+            className="px-2 hover:bg-orange-100 py-1 rounded transition-colors"
           >
             Category
           </Link>
@@ -77,7 +77,7 @@ const UserMenu = ({ close }) => {
           <Link
             onClick={handleClose}
             to={"/dashboard/subcategory"}
-            className="px-2 hover:bg-orange-200 py-1"
+            className="px-2 hover:bg-orange-100 py-1 rounded transition-colors"
           >
             Sub Category
           </Link>
@@ -87,7 +87,7 @@ const UserMenu = ({ close }) => {
           <Link
             onClick={handleClose}
             to={"/dashboard/upload-product"}
-            className="px-2 hover:bg-orange-200 py-1"
+            className="px-2 hover:bg-orange-100 py-1 rounded transition-colors"
           >
             Upload Product
           </Link>
@@ -97,7 +97,7 @@ const UserMenu = ({ close }) => {
           <Link
             onClick={handleClose}
             to={"/dashboard/product"}
-            className="px-2 hover:bg-orange-200 py-1"
+            className="px-2 hover:bg-orange-100 py-1 rounded transition-colors"
           >
             Product
           </Link>
@@ -106,7 +106,7 @@ const UserMenu = ({ close }) => {
           <Link
             onClick={handleClose}
             to={"/dashboard/orders"}
-            className="px-2 hover:bg-orange-200 py-1"
+            className="px-2 hover:bg-orange-100 py-1 rounded transition-colors"
           >
             All Orders
           </Link>
@@ -115,7 +115,7 @@ const UserMenu = ({ close }) => {
         <Link
           onClick={handleClose}
           to={"/dashboard/myorders"}
-          className="px-2 hover:bg-orange-200 py-1"
+          className="px-2 hover:bg-orange-100 py-1 rounded transition-colors"
         >
           My Orders
         </Link>
@@ -123,14 +123,14 @@ const UserMenu = ({ close }) => {
         <Link
           onClick={handleClose}
           to={"/dashboard/address"}
-          className="px-2 hover:bg-orange-200 py-1"
+          className="px-2 hover:bg-orange-100 py-1 rounded transition-colors"
         >
           Save Address
         </Link>
 
         <button
           onClick={handleLogout}
-          className="text-left px-2 hover:bg-orange-200 py-1"
+          className="text-left px-2 hover:bg-orange-100 py-1 rounded transition-colors text-red-600 font-bold"
         >
           Log Out
         </button>

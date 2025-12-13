@@ -8,6 +8,13 @@ export async function CashOnDeliveryOrderController(request, response) {
   try {
     const userId = request.userId; // auth middleware
     const { list_items, totalAmt, addressId, subTotalAmt } = request.body;
+    if (!userId || !list_items || !totalAmt || !addressId || !subTotalAmt) {
+      return response.status(400).json({
+        message: "All fields are required",
+        error: true,
+        success: false,
+      });
+    }
 
     const payload = list_items.map((el) => {
       return {

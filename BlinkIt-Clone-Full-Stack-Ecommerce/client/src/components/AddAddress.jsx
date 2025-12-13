@@ -5,8 +5,9 @@ import toast from "react-hot-toast";
 import AxiosToastError from "../utils/AxiosToastError";
 import { IoClose } from "react-icons/io5";
 import { useGlobalContext } from "../provider/GlobalProvider";
+import { motion } from "framer-motion"
 
-const AddAddress = () => {
+const AddAddress = ({ close }) => {
   const { register, handleSubmit, reset } = useForm();
   const { fetchAddress } = useGlobalContext();
 
@@ -41,78 +42,146 @@ const AddAddress = () => {
     }
   };
   return (
-    <section className="bg-black fixed top-0 left-0 right-0 bottom-0 z-50 bg-opacity-70 h-screen overflow-auto">
-      <div className="bg-white p-4 w-full max-w-lg mt-8 mx-auto rounded">
-        <div className="flex justify-between items-center gap-4">
-          <h2 className="font-semibold">Add Address</h2>
-          <button onClick={close} className="hover:text-red-500">
-            <IoClose size={25} />
+    <section className="bg-black/60 backdrop-blur-sm fixed top-0 left-0 right-0 bottom-0 z-50 h-screen overflow-auto flex items-center justify-center p-4">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.9 }}
+        className="bg-white p-8 w-full max-w-lg mx-auto rounded-2xl shadow-xl relative"
+      >
+        <div className="flex justify-between items-center mb-6 border-b pb-4 border-gray-100">
+          <h2 className="font-bold text-xl text-gray-800">Add New Address</h2>
+          <button onClick={close} className="hover:text-red-500 text-gray-400 transition-colors p-1 rounded-full hover:bg-gray-50">
+            <IoClose size={24} />
           </button>
         </div>
-        <form className="mt-4 grid gap-4" onSubmit={handleSubmit(onSubmit)}>
+        <div className="mb-6">
+          <button
+            type="button"
+            className="w-full text-sm font-semibold bg-green-50 text-green-700 px-4 py-3 rounded-lg hover:bg-green-100 flex items-center justify-center gap-2 transition-colors border border-green-100"
+            onClick={() => {
+              if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                  const { latitude, longitude } = position.coords
+                  const latInput = document.getElementById("lat");
+                  const lonInput = document.getElementById("lon");
+                  if (latInput) latInput.value = latitude;
+                  if (lonInput) lonInput.value = longitude;
+                  toast.success("Location fetched!");
+                }, (error) => {
+                  toast.error("Failed to get location: " + error.message);
+                })
+              } else {
+                toast.error("Geolocation is not supported by this browser.");
+              }
+            }}
+          >
+            📍 Use Current Location
+          </button>
+        </div>
+        <form className="grid gap-5" onSubmit={handleSubmit(async (data) => {
+          const lat = document.getElementById("lat")?.value;
+          const lon = document.getElementById("lon")?.value;
+
+          try {
+            const response = await Axios({
+              ...SummaryApi.createAddress,
+              data: {
+                address_line: data.addressline,
+                city: data.city,
+                state: data.state,
+                country: data.country,
+                pincode: data.pincode,
+                mobile: data.mobile,
+                lat: lat,
+                lon: lon
+              },
+            });
+
+            const { data: responseData } = response;
+
+            if (responseData.success) {
+              toast.success(responseData.message);
+              if (close) {
+                close();
+                reset();
+                fetchAddress();
+              }
+            }
+          } catch (error) {
+            AxiosToastError(error);
+          }
+        })}>
+          <input type="hidden" id="lat" />
+          <input type="hidden" id="lon" />
           <div className="grid gap-1">
-            <label htmlFor="addressline">Address Line :</label>
+            <label htmlFor="addressline" className="text-sm font-semibold text-gray-800">Address Line</label>
             <input
               type="text"
               id="addressline"
-              className="border bg-blue-50 p-2 rounded"
+              placeholder="House No, Building, Street"
+              className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-primary-200 focus:ring-2 focus:ring-primary-200/20 transition-all font-semibold"
               {...register("addressline", { required: true })}
             />
           </div>
-          <div className="grid gap-1">
-            <label htmlFor="city">City :</label>
-            <input
-              type="text"
-              id="city"
-              className="border bg-blue-50 p-2 rounded"
-              {...register("city", { required: true })}
-            />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-1">
+              <label htmlFor="city" className="text-sm font-semibold text-gray-800">City</label>
+              <input
+                type="text"
+                id="city"
+                className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-primary-200 focus:ring-2 focus:ring-primary-200/20 transition-all font-semibold"
+                {...register("city", { required: true })}
+              />
+            </div>
+            <div className="grid gap-1">
+              <label htmlFor="state" className="text-sm font-semibold text-gray-800">State</label>
+              <input
+                type="text"
+                id="state"
+                className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-primary-200 focus:ring-2 focus:ring-primary-200/20 transition-all font-semibold"
+                {...register("state", { required: true })}
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-1">
+              <label htmlFor="pincode" className="text-sm font-semibold text-gray-800">Pincode</label>
+              <input
+                type="text"
+                id="pincode"
+                className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-primary-200 focus:ring-2 focus:ring-primary-200/20 transition-all font-semibold"
+                {...register("pincode", { required: true })}
+              />
+            </div>
+            <div className="grid gap-1">
+              <label htmlFor="country" className="text-sm font-semibold text-gray-800">Country</label>
+              <input
+                type="text"
+                id="country"
+                className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-primary-200 focus:ring-2 focus:ring-primary-200/20 transition-all font-semibold"
+                {...register("country", { required: true })}
+              />
+            </div>
           </div>
           <div className="grid gap-1">
-            <label htmlFor="state">State :</label>
-            <input
-              type="text"
-              id="state"
-              className="border bg-blue-50 p-2 rounded"
-              {...register("state", { required: true })}
-            />
-          </div>
-          <div className="grid gap-1">
-            <label htmlFor="pincode">Pincode :</label>
-            <input
-              type="text"
-              id="pincode"
-              className="border bg-blue-50 p-2 rounded"
-              {...register("pincode", { required: true })}
-            />
-          </div>
-          <div className="grid gap-1">
-            <label htmlFor="country">Country :</label>
-            <input
-              type="text"
-              id="country"
-              className="border bg-blue-50 p-2 rounded"
-              {...register("country", { required: true })}
-            />
-          </div>
-          <div className="grid gap-1">
-            <label htmlFor="mobile">Mobile No. :</label>
+            <label htmlFor="mobile" className="text-sm font-semibold text-gray-800">Mobile No.</label>
             <input
               type="text"
               id="mobile"
-              className="border bg-blue-50 p-2 rounded"
+              className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-primary-200 focus:ring-2 focus:ring-primary-200/20 transition-all font-semibold"
               {...register("mobile", { required: true })}
             />
           </div>
 
           <button
             type="submit"
-            className="bg-primary-200 w-full  py-2 font-semibold mt-4 hover:bg-primary-100"
+            className="bg-gradient-to-r from-primary-200 to-primary-100 w-full py-3 rounded-lg font-bold mt-2 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all text-white"
           >
-            Submit
+            Save Address
           </button>
         </form>
-      </div>
+      </motion.div>
     </section>
   );
 };

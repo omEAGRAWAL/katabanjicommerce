@@ -11,75 +11,83 @@ import { useNavigate } from 'react-router-dom'
 import { loadStripe } from '@stripe/stripe-js'
 
 const CheckoutPage = () => {
-  const { notDiscountTotalPrice, totalPrice, totalQty, fetchCartItem,fetchOrder } = useGlobalContext()
+  const { notDiscountTotalPrice, totalPrice, totalQty, fetchCartItem, fetchOrder } = useGlobalContext()
   const [openAddress, setOpenAddress] = useState(false)
   const addressList = useSelector(state => state.addresses.addressList)
-  const [selectAddress, setSelectAddress] = useState(0)
+  const [selectAddress, setSelectAddress] = useState(null)
   const cartItemsList = useSelector(state => state.cartItem.cart)
   const navigate = useNavigate()
 
-  const handleCashOnDelivery = async() => {
-      try {
-          const response = await Axios({
-            ...SummaryApi.CashOnDeliveryOrder,
-            data : {
-              list_items : cartItemsList,
-              addressId : addressList[selectAddress]?._id,
-              subTotalAmt : totalPrice,
-              totalAmt :  totalPrice,
-            }
-          })
-
-          const { data : responseData } = response
-
-          if(responseData.success){
-              toast.success(responseData.message)
-              if(fetchCartItem){
-                fetchCartItem()
-              }
-              if(fetchOrder){
-                fetchOrder()
-              }
-              navigate('/success',{
-                state : {
-                  text : "Order"
-                }
-              })
-          }
-
-      } catch (error) {
-        AxiosToastError(error)
-      }
-  }
-
-  const handleOnlinePayment = async()=>{
+  const handleCashOnDelivery = async () => {
     try {
-        toast.loading("Loading...")
-        const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY
-        const stripePromise = await loadStripe(stripePublicKey)
-       
-        const response = await Axios({
-            ...SummaryApi.payment_url,
-            data : {
-              list_items : cartItemsList,
-              addressId : addressList[selectAddress]?._id,
-              subTotalAmt : totalPrice,
-              totalAmt :  totalPrice,
-            }
-        })
+      if (selectAddress === null) {
+        toast.error("Please select address")
+        return
+      }
+      const response = await Axios({
+        ...SummaryApi.CashOnDeliveryOrder,
+        data: {
+          list_items: cartItemsList,
+          addressId: addressList[selectAddress]?._id,
+          subTotalAmt: totalPrice,
+          totalAmt: totalPrice,
+        }
+      })
 
-        const { data : responseData } = response
+      const { data: responseData } = response
 
-        stripePromise.redirectToCheckout({ sessionId : responseData.id })
-        
-        if(fetchCartItem){
+      if (responseData.success) {
+        toast.success(responseData.message)
+        if (fetchCartItem) {
           fetchCartItem()
         }
-        if(fetchOrder){
+        if (fetchOrder) {
           fetchOrder()
         }
+        navigate('/success', {
+          state: {
+            text: "Order"
+          }
+        })
+      }
+
     } catch (error) {
-        AxiosToastError(error)
+      AxiosToastError(error)
+    }
+  }
+
+  const handleOnlinePayment = async () => {
+    try {
+      if (selectAddress === null) {
+        toast.error("Please select address")
+        return
+      }
+      toast.loading("Loading...")
+      const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY
+      const stripePromise = await loadStripe(stripePublicKey)
+
+      const response = await Axios({
+        ...SummaryApi.payment_url,
+        data: {
+          list_items: cartItemsList,
+          addressId: addressList[selectAddress]?._id,
+          subTotalAmt: totalPrice,
+          totalAmt: totalPrice,
+        }
+      })
+
+      const { data: responseData } = response
+
+      stripePromise.redirectToCheckout({ sessionId: responseData.id })
+
+      if (fetchCartItem) {
+        fetchCartItem()
+      }
+      if (fetchOrder) {
+        fetchOrder()
+      }
+    } catch (error) {
+      AxiosToastError(error)
     }
   }
   return (
@@ -95,7 +103,7 @@ const CheckoutPage = () => {
                   <label htmlFor={"address" + index} className={!address.status && "hidden"}>
                     <div className='border rounded p-3 flex gap-3 hover:bg-blue-50'>
                       <div>
-                        <input id={"address" + index} type='radio' value={index} onChange={(e) => setSelectAddress(e.target.value)} name='address' />
+                        <input id={"address" + index} type='radio' value={index} onChange={(e) => setSelectAddress(e.target.value)} name='address' checked={selectAddress == index} />
                       </div>
                       <div>
                         <p>{address.address_line}</p>

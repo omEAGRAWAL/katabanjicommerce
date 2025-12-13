@@ -108,6 +108,16 @@ const AdminOrderControl = () => {
                                                 <p>{order.delivery_address?.address_line}</p>
                                                 <p>{order.delivery_address?.city}, {order.delivery_address?.state} - {order.delivery_address?.pincode}</p>
                                                 <p>Mobile: {order.delivery_address?.mobile}</p>
+                                                {order.delivery_address?.lat && order.delivery_address?.lon && (
+                                                    <a
+                                                        href={`https://www.google.com/maps?q=${order.delivery_address.lat},${order.delivery_address.lon}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="text-blue-500 hover:text-blue-700 underline text-xs mt-1 block"
+                                                    >
+                                                        View on Google Maps
+                                                    </a>
+                                                )}
                                             </div>
                                         </div>
 
