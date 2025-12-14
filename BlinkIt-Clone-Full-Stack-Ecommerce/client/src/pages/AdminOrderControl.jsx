@@ -165,6 +165,9 @@ const AdminOrderControl = () => {
                                                             <img src={img} alt="product" className="w-16 h-16 object-cover rounded" />
                                                             <div>
                                                                 <p className="font-medium text-gray-800">{order.product_details.name}</p>
+                                                                {order.product_details.variant && (
+                                                                    <p className="text-sm text-gray-500">Variant: {order.product_details.variant.name}</p>
+                                                                )}
                                                             </div>
                                                         </div>
                                                     )

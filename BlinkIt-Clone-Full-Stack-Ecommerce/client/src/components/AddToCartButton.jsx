@@ -8,7 +8,7 @@ import Loading from './Loading'
 import { useSelector } from 'react-redux'
 import { FaMinus, FaPlus } from "react-icons/fa6";
 
-const AddToCartButton = ({ data }) => {
+const AddToCartButton = ({ data, variantId }) => {
     const { fetchCartItem, updateCartItem, deleteCartItem } = useGlobalContext()
     const [loading, setLoading] = useState(false)
     const cartItem = useSelector(state => state.cartItem.cart)
@@ -26,7 +26,8 @@ const AddToCartButton = ({ data }) => {
             const response = await Axios({
                 ...SummaryApi.addTocart,
                 data: {
-                    productId: data?._id
+                    productId: data?._id,
+                    variantId: variantId || null
                 }
             })
 
@@ -48,13 +49,19 @@ const AddToCartButton = ({ data }) => {
 
     //checking this item in cart or not
     useEffect(() => {
-        const checkingitem = cartItem.some(item => item.productId._id === data._id)
+        const checkingitem = cartItem.some(item =>
+            item.productId._id === data._id &&
+            (variantId ? item.variantId === variantId : !item.variantId)
+        )
         setIsAvailableCart(checkingitem)
 
-        const product = cartItem.find(item => item.productId._id === data._id)
+        const product = cartItem.find(item =>
+            item.productId._id === data._id &&
+            (variantId ? item.variantId === variantId : !item.variantId)
+        )
         setQty(product?.quantity)
         setCartItemsDetails(product)
-    }, [data, cartItem])
+    }, [data, cartItem, variantId])
 
 
     const increaseQty = async (e) => {

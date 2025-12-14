@@ -42,6 +42,7 @@ const MyOrders = () => {
                   </div>
                   <div>
                     <p className='font-bold text-gray-800 text-lg mb-1'>{order.product_details.name}</p>
+                    {order.product_details.variant && <p className='text-sm text-gray-500 mb-1'>Variant: {order.product_details.variant.name}</p>}
                     <p className='text-gray-600 text-sm font-medium'>Order ID: <span className='font-bold text-gray-800'>{order?.orderId}</span></p>
                   </div>
                 </div>

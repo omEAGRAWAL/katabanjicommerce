@@ -17,6 +17,10 @@ const orderSchema = new mongoose.Schema({
     product_details: {
         name: String,
         image: Array,
+        variant: {
+            type: String, // e.g., "1kg", "Red"
+            default: ""
+        }
     },
     paymentId: {
         type: String,

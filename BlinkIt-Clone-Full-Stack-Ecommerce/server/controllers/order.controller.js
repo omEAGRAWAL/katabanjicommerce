@@ -17,6 +17,10 @@ export async function CashOnDeliveryOrderController(request, response) {
     }
 
     const payload = list_items.map((el) => {
+      let variantDetails = null;
+      if (el.variantId) {
+        variantDetails = el.productId.variants.find(v => v._id.toString() === el.variantId.toString());
+      }
       return {
         userId: userId,
         orderId: `ORD-${new mongoose.Types.ObjectId()}`,
@@ -24,6 +28,10 @@ export async function CashOnDeliveryOrderController(request, response) {
         product_details: {
           name: el.productId.name,
           image: el.productId.image,
+          variant: variantDetails ? {
+            name: variantDetails.name,
+            price: variantDetails.price
+          } : null
         },
         paymentId: "",
         payment_status: "CASH ON DELIVERY",
@@ -73,18 +81,34 @@ export async function paymentController(request, response) {
     const user = await UserModel.findById(userId);
 
     const line_items = list_items.map((item) => {
+      let variantDetails = null;
+      let price = item.productId.price;
+      let discount = item.productId.discount;
+      let name = item.productId.name;
+
+      if (item.variantId) {
+        const v = item.productId.variants.find(v => v._id.toString() === item.variantId.toString());
+        if (v) {
+          variantDetails = v;
+          price = v.price;
+          discount = v.discount;
+          name = `${name} (${v.name})`;
+        }
+      }
+
       return {
         price_data: {
           currency: "inr",
           product_data: {
-            name: item.productId.name,
+            name: name,
             images: item.productId.image,
             metadata: {
               productId: item.productId._id,
+              variantId: item.variantId || ""
             },
           },
           unit_amount:
-            pricewithDiscount(item.productId.price, item.productId.discount) *
+            pricewithDiscount(price, discount) *
             100,
         },
         adjustable_quantity: {
@@ -134,6 +158,22 @@ const getOrderProductItems = async ({
     for (const item of lineItems.data) {
       const product = await Stripe.products.retrieve(item.price.product);
 
+      let variantDetails = null;
+      if (product.metadata.variantId) {
+        variantDetails = {
+          name: product.name.replace(/.*\((.*)\)/, '$1'), // Attempt to extract variant name from "Product (Variant)"
+          // ideally we should probably fetch the product to get clean variant details, but saving what we sent to stripe is also fine.
+          // For now, let's just store the name as is or try to be cleaner.
+          // Actually, since we stored productId, we can fetch the product text if we wanted, 
+          // but for now let's just use the metadata and name.
+          // If we want to be precise, we need to fetch ProductModel here to get original Variant Data? 
+          // Or just rely on what we sent.
+          // The existing code re-fetches nothing, just uses Stripe data.
+          // Let's stick to using Stripe data.
+          // We sent "Name (Variant)" as name.
+        }
+      }
+
       const paylod = {
         userId: userId,
         orderId: `ORD-${new mongoose.Types.ObjectId()}`,
@@ -141,6 +181,10 @@ const getOrderProductItems = async ({
         product_details: {
           name: product.name,
           image: product.images,
+          variant: product.metadata.variantId ? {
+            name: product.name, // Stripe product name has variant info
+            price: item.amount_total / 100 / item.quantity // Calculated unit price
+          } : null
         },
         paymentId: paymentId,
         payment_status: payment_status,

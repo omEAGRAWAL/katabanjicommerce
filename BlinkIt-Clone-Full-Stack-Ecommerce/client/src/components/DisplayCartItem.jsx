@@ -50,6 +50,20 @@ const DisplayCartItem = ({ close }) => {
                                     {
                                         cartItem[0] && (
                                             cartItem.map((item, index) => {
+                                                let variantDetails = null;
+                                                let displayPrice = item?.productId?.price;
+                                                let displayDiscount = item?.productId?.discount;
+                                                let displayName = item?.productId?.name;
+
+                                                if (item.variantId && item.productId.variants) {
+                                                    variantDetails = item.productId.variants.find(v => v._id === item.variantId)
+                                                    if (variantDetails) {
+                                                        displayPrice = variantDetails.price;
+                                                        displayDiscount = variantDetails.discount;
+                                                        displayName = `${item?.productId?.name} (${variantDetails.name})`;
+                                                    }
+                                                }
+
                                                 return (
                                                     <div key={item?._id + "cartItemDisplay"} className='flex w-full gap-3 p-3 border-b last:border-b-0'>
                                                         <div className='w-16 h-16 shrink-0 bg-gray-50 border rounded-lg flex items-center justify-center p-1'>
@@ -60,17 +74,17 @@ const DisplayCartItem = ({ close }) => {
                                                         </div>
                                                         <div className='w-full flex flex-col justify-between'>
                                                             <div>
-                                                                <p className='text-sm font-medium text-gray-800 line-clamp-2 leading-tight'>{item?.productId?.name}</p>
+                                                                <p className='text-sm font-medium text-gray-800 line-clamp-2 leading-tight'>{displayName}</p>
                                                                 <p className='text-xs text-gray-500 mt-0.5'>{item?.productId?.unit}</p>
                                                             </div>
                                                             <div className='flex items-center justify-between mt-2'>
                                                                 <div className='flex items-center gap-2'>
-                                                                    <p className='font-bold text-sm text-gray-900'>{DisplayPriceInRupees(pricewithDiscount(item?.productId?.price, item?.productId?.discount))}</p>
-                                                                    {Boolean(item?.productId?.discount) && (
-                                                                        <p className='text-xs text-gray-400 line-through'>{DisplayPriceInRupees(item?.productId?.price)}</p>
+                                                                    <p className='font-bold text-sm text-gray-900'>{DisplayPriceInRupees(pricewithDiscount(displayPrice, displayDiscount))}</p>
+                                                                    {Boolean(displayDiscount) && (
+                                                                        <p className='text-xs text-gray-400 line-through'>{DisplayPriceInRupees(displayPrice)}</p>
                                                                     )}
                                                                 </div>
-                                                                <AddToCartButton data={item?.productId} />
+                                                                <AddToCartButton data={item?.productId} variantId={item?.variantId} />
                                                             </div>
                                                         </div>
                                                     </div>

@@ -18,10 +18,12 @@ const ProductDisplayPage = () => {
   let productId = params?.product?.split("-")?.slice(-1)[0]
   const [data, setData] = useState({
     name: "",
-    image: []
+    image: [],
+    variants: []
   })
   const [image, setImage] = useState(0)
   const [loading, setLoading] = useState(false)
+  const [selectedVariant, setSelectedVariant] = useState(null)
   const imageContainer = useRef()
 
   const fetchProductDetails = async () => {
@@ -37,6 +39,9 @@ const ProductDisplayPage = () => {
 
       if (responseData.success) {
         setData(responseData.data)
+        if (responseData.data.variants && responseData.data.variants.length > 0) {
+          setSelectedVariant(responseData.data.variants[0])
+        }
       }
     } catch (error) {
       AxiosToastError(error)
@@ -117,7 +122,7 @@ const ProductDisplayPage = () => {
         <div className='bg-white p-6 rounded-2xl shadow-sm border border-gray-100'>
           <p className='bg-green-100 text-green-700 font-semibold w-fit px-3 py-1 rounded-full text-xs'>10 Min Delivery</p>
           <h2 className='text-2xl font-bold lg:text-4xl text-gray-800 mt-3 mb-1'>{data.name}</h2>
-          <p className='text-gray-500 font-medium'>{data.unit}</p>
+          <p className='text-gray-500 font-medium'>{selectedVariant ? selectedVariant.name : data.unit}</p>
 
           <div className="my-4">
             <Divider />
@@ -127,27 +132,51 @@ const ProductDisplayPage = () => {
             <p className='text-gray-700 text-sm mb-2'>Price</p>
             <div className='flex items-end gap-3 lg:gap-4'>
               <div className='border border-green-600 px-4 py-2 rounded-lg bg-green-50 w-fit flex items-center gap-2'>
-                <p className='font-bold text-xl lg:text-2xl text-gray-900'>{DisplayPriceInRupees(pricewithDiscount(data.price, data.discount))}</p>
+                <p className='font-bold text-xl lg:text-2xl text-gray-900'>
+                  {DisplayPriceInRupees(pricewithDiscount(
+                    selectedVariant ? selectedVariant.price : data.price,
+                    selectedVariant ? selectedVariant.discount : data.discount
+                  ))}
+                </p>
               </div>
               {
-                data.discount && (
+                (selectedVariant ? selectedVariant.discount : data.discount) && (
                   <div className="mb-2">
-                    <p className='line-through text-gray-500 text-lg'>{DisplayPriceInRupees(data.price)}</p>
-                    <p className="font-bold text-green-600 text-sm">Save {data.discount}%</p>
+                    <p className='line-through text-gray-500 text-lg'>{DisplayPriceInRupees(selectedVariant ? selectedVariant.price : data.price)}</p>
+                    <p className="font-bold text-green-600 text-sm">Save {selectedVariant ? selectedVariant.discount : data.discount}%</p>
                   </div>
                 )
               }
             </div>
           </div>
 
+          {
+            data.variants && data.variants.length > 0 && (
+              <div className='my-4'>
+                <p className='font-semibold mb-2 text-gray-700'>Variants</p>
+                <div className='flex gap-3 flex-wrap'>
+                  {data.variants.map((v, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setSelectedVariant(v)}
+                      className={`px-3 py-1 rounded border ${selectedVariant && selectedVariant._id === v._id ? 'border-primary-200 bg-primary-50 text-primary-600 font-semibold shadow-inner transform scale-105' : 'border-gray-300 hover:border-primary-200 text-gray-600'} transition-all`}
+                    >
+                      {v.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )
+          }
+
           <div className='mt-6'>
             {
-              data.stock === 0 ? (
+              (selectedVariant ? selectedVariant.stock : data.stock) === 0 ? (
                 <p className='text-lg text-red-500 font-bold bg-red-50 px-4 py-2 rounded-lg inline-block'>Out of Stock</p>
               )
                 : (
                   <div className='w-full max-w-xs'>
-                    <AddToCartButton data={data} />
+                    <AddToCartButton data={data} variantId={selectedVariant ? selectedVariant._id : null} />
                   </div>
                 )
             }
