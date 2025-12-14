@@ -50,16 +50,7 @@ const Header = () => {
                         <div className='w-full lg:hidden flex flex-col gap-2'>
                             <div className='flex items-center justify-between w-full'>
                                 <div className='flex items-center gap-2'>
-                                    <div className='bg-white/20 p-2 rounded-full'>
-                                        <MdLocationOn size={20} className='text-white' />
-                                    </div>
-                                    <div>
-                                        <p className='text-xs text-secondary-200 font-medium uppercase tracking-wide'>Delivering to</p>
-                                        <div className='flex items-center gap-1 cursor-pointer'>
-                                            <p className='font-bold text-lg leading-none'>Indira Nagar...</p>
-                                            <GoTriangleDown size={14} />
-                                        </div>
-                                    </div>
+                                    <div className='text-2xl font-semibold'>kirana India</div>
                                 </div>
                                 <div className='relative'>
                                     {
