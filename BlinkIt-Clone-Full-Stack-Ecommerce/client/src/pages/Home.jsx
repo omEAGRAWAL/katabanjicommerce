@@ -30,79 +30,84 @@ const Home = () => {
 
 
   return (
-    <section className='bg-white min-h-screen'>
-      <div className='container mx-auto px-4 pt-6'>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6 }}
-          className={`w-full h-full min-h-48 bg-blue-100 rounded-2xl overflow-hidden shadow-premium ${!banner && "animate-pulse my-2"} `}
-        >
+
+    <section className='bg-white min-h-screen pb-20'>
+      {/** Location & Search Mobile Placeholder - actually handled in Header but spacing needed */}
+      <div className='lg:hidden h-2'></div>
+
+      {/** Banner Section - Replacing grid with single promo banner */}
+      <div className='container mx-auto px-4 mt-4'>
+        <div className={`w-full h-40 lg:h-64 bg-gradient-to-r from-gray-100 to-gray-200 rounded-xl overflow-hidden relative shadow-sm ${!banner && "animate-pulse"}`}>
           <img
             src={banner}
-            className='w-full h-full hidden lg:block object-cover transform hover:scale-105 transition-transform duration-700'
+            className='w-full h-full object-cover hidden lg:block'
             alt='banner'
           />
           <img
             src={bannerMobile}
-            className='w-full h-full lg:hidden object-cover'
+            className='w-full h-full object-cover lg:hidden'
             alt='banner'
           />
-        </motion.div>
+          {/* Placeholder for "Shop Now" text overlay if needed, but assuming image has it */}
+          {/* <div className='absolute bottom-4 left-4'>
+                         <button className='bg-black text-white px-4 py-2 rounded-full font-bold text-sm'>Shop Now</button>
+                    </div> */}
+        </div>
       </div>
 
-      <div className='container mx-auto px-4 my-8'>
-        <h3 className='text-xl font-bold text-gray-900 mb-4'>Shop by Category</h3>
-        <div className='grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-4'>
+      {/** Circular Categories Section */}
+      <div className='container mx-auto px-4 mt-8'>
+        <div className='flex items-center justify-between mb-4'>
+          <h3 className='text-lg font-bold text-gray-900'>Shop by Category</h3>
+          {/* <Link to="/categories" className='text-green-600 text-sm font-semibold'>See All</Link> */}
+        </div>
+
+        <div className='flex gap-4 overflow-x-auto scrollbar-none pb-4'>
           {
             loadingCategory ? (
-              new Array(12).fill(null).map((c, index) => {
-                return (
-                  <div key={index + "loadingcategory"} className='bg-white rounded-xl p-4 min-h-36 grid gap-2 shadow-sm animate-pulse border border-gray-100'>
-                    <div className='bg-gray-100 min-h-20 rounded-lg'></div>
-                    <div className='bg-gray-100 h-6 rounded w-3/4 mx-auto'></div>
-                  </div>
-                )
-              })
+              new Array(10).fill(null).map((c, index) => (
+                <div key={index + "loading"} className='flex flex-col items-center gap-2 min-w-[80px]'>
+                  <div className='w-16 h-16 bg-gray-100 rounded-full animate-pulse'></div>
+                  <div className='w-12 h-3 bg-gray-100 rounded animate-pulse'></div>
+                </div>
+              ))
             ) : (
-              categoryData.map((cat, index) => {
-                return (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.05 }}
-                    key={cat._id + "displayCategory"}
-                    className='group cursor-pointer'
-                    onClick={() => handleRedirectProductListpage(cat._id, cat.name)}
-                  >
-                    <div className='bg-gray-50 rounded-xl p-3 h-32 flex items-center justify-center shadow-sm group-hover:shadow-premium-hover group-hover:-translate-y-1 transition-all duration-300 border border-transparent group-hover:border-primary-100/30'>
-                      <img
-                        src={cat.image}
-                        className='w-full h-full object-scale-down transform group-hover:scale-110 transition-transform duration-300'
-                        alt={cat.name}
-                      />
-                    </div>
-                    <p className='text-center text-sm font-medium mt-2 text-gray-900 group-hover:text-primary-200 transition-colors'>{cat.name}</p>
-                  </motion.div>
-                )
-              })
+              categoryData.map((cat, index) => (
+                <motion.div
+                  key={cat._id + "display"}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  className='flex flex-col items-center gap-2 min-w-[80px] cursor-pointer group'
+                  onClick={() => handleRedirectProductListpage(cat._id, cat.name)}
+                >
+                  <div className='w-20 h-20 bg-blue-50/50 rounded-full flex items-center justify-center p-3 border border-gray-100 group-hover:border-primary-100 transition-colors shadow-sm overflow-hidden'>
+                    <img
+                      src={cat.image}
+                      className='w-full h-full object-scale-down group-hover:scale-110 transition-transform duration-300'
+                      alt={cat.name}
+                    />
+                  </div>
+                  <p className='text-xs font-semibold text-center text-gray-700 leading-tight w-20 break-words line-clamp-2'>{cat.name}</p>
+                </motion.div>
+              ))
             )
           }
         </div>
       </div>
 
-      <div className='container mx-auto px-4 pb-10 space-y-12'>
-        {/***display category product */}
+      {/** Product Sections */}
+      <div className='container mx-auto px-4 space-y-8 mt-4'>
         {
-          categoryData?.map((c, index) => {
-            return (
+          categoryData?.map((c, index) => (
+            <div key={c?._id + "CategoryProductSection"} className={`${index === 0 ? "pt-2" : ""}`}>
               <CategoryWiseProductDisplay
-                key={c?._id + "CategorywiseProduct"}
                 id={c?._id}
                 name={c?.name}
+                index={index} // Making sure to pass index if needed for specific logic
               />
-            )
-          })
+            </div>
+          ))
         }
       </div>
 

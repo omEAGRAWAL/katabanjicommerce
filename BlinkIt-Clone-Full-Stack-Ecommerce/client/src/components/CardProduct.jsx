@@ -11,55 +11,51 @@ import { useState } from 'react'
 import { useGlobalContext } from '../provider/GlobalProvider'
 import AddToCartButton from './AddToCartButton'
 
-const CardProduct = ({data}) => {
-    const url = `/product/${valideURLConvert(data.name)}-${data._id}`
-    const [loading,setLoading] = useState(false)
-  
+const CardProduct = ({ data }) => {
+  const url = `/product/${valideURLConvert(data.name)}-${data._id}`
+  const [loading, setLoading] = useState(false)
+
   return (
-    <Link to={url} className='border py-2 lg:p-4 grid gap-1 lg:gap-3 min-w-36 lg:min-w-52 rounded cursor-pointer bg-white' >
-      <div className='min-h-20 w-full max-h-24 lg:max-h-32 rounded overflow-hidden'>
-            <img 
-                src={data.image[0]}
-                className='w-full h-full object-scale-down lg:scale-125'
-            />
-      </div>
-      <div className='flex items-center gap-1'>
-        <div className='rounded text-xs w-fit p-[1px] px-2 text-green-600 bg-green-50'>
-              10 min 
-        </div>
-        <div>
-            {
-              Boolean(data.discount) && (
-                <p className='text-green-600 bg-green-100 px-2 w-fit text-xs rounded-full'>{data.discount}% discount</p>
-              )
-            }
-        </div>
-      </div>
-      <div className='px-2 lg:px-0 font-medium text-ellipsis text-sm lg:text-base line-clamp-2'>
-        {data.name}
-      </div>
-      <div className='w-fit gap-1 px-2 lg:px-0 text-sm lg:text-base'>
-        {data.unit} 
-        
+    <Link to={url} className='border border-gray-100 py-3 p-3 grid gap-2 min-w-[160px] lg:min-w-[190px] rounded-xl cursor-pointer bg-white shadow-sm hover:shadow-premium-hover transition-shadow h-full' >
+      <div className='bg-slate-50 min-h-28 w-full max-h-32 rounded-lg overflow-hidden flex items-center justify-center p-2'>
+        <img
+          src={data.image[0]}
+          className='w-full h-full object-contain hover:scale-110 transition-transform duration-300'
+        />
       </div>
 
-      <div className='px-2 lg:px-0 flex items-center justify-between gap-1 lg:gap-3 text-sm lg:text-base'>
-        <div className='flex items-center gap-1'>
-          <div className='font-semibold'>
-              {DisplayPriceInRupees(pricewithDiscount(data.price,data.discount))} 
-          </div>
-          
-          
+      <div className='flex items-center justify-between gap-1'>
+        <div className='rounded-md text-[10px] font-bold px-1.5 py-0.5 text-gray-700 bg-gray-100 flex items-center gap-1'>
+          <span className='w-3 h-3 bg-gray-300 rounded-full flex items-center justify-center text-[8px]'>🕒</span> 12 mins
         </div>
+      </div>
+
+      <div className='font-semibold text-gray-800 text-sm line-clamp-2 leading-tight h-10'>
+        {data.name}
+      </div>
+
+      <div className='text-xs text-gray-500'>
+        {data.unit}
+      </div>
+
+      <div className='flex items-center justify-between gap-2 mt-1'>
+        <div className='flex flex-col'>
+          <div className='font-semibold text-sm text-gray-800'>
+            {DisplayPriceInRupees(pricewithDiscount(data.price, data.discount))}
+          </div>
+          {Boolean(data.discount) && (
+            <p className='text-xs text-gray-400 line-through'>{DisplayPriceInRupees(data.price)}</p>
+          )}
+        </div>
+
         <div className=''>
           {
             data.stock == 0 ? (
-              <p className='text-red-500 text-sm text-center'>Out of stock</p>
+              <p className='text-red-500 text-xs font-bold bg-red-50 px-2 py-1 rounded-md border border-red-100'>Out of stock</p>
             ) : (
               <AddToCartButton data={data} />
             )
           }
-            
         </div>
       </div>
 
