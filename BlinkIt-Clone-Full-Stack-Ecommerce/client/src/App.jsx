@@ -2,6 +2,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import "./App.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import BottomNavigation from "./components/BottomNavigation";
 import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import fetchUserDetails from "./utils/fetchUserDetails";
@@ -82,7 +83,7 @@ function App() {
   return (
     <GlobalProvider>
       <Header />
-      <main className="min-h-[78vh]">
+      <main className="min-h-[78vh] pb-32 lg:pb-0">
         <Outlet />
       </main>
       <Footer />
@@ -92,6 +93,7 @@ function App() {
         <InstallAppButton />
         {/* rest of your app */}
       </>
+      <BottomNavigation />
     </GlobalProvider>
   );
 }

@@ -41,108 +41,106 @@ const Header = () => {
         navigate("/user")
     }
 
+    useEffect(() => {
+        const handleOpenCart = () => {
+            setOpenCartSection(true)
+        }
+
+        window.addEventListener('openCart', handleOpenCart)
+
+        return () => {
+            window.removeEventListener('openCart', handleOpenCart)
+        }
+    }, [])
+
     return (
-        <header className='h-36 lg:h-24 sticky top-0 z-40 flex flex-col justify-center gap-1 bg-primary-200 text-white shadow-md'>
-            {
-                !(isSearchPage && isMobile) && (
-                    <div className='container mx-auto flex items-center px-4 justify-between h-full lg:h-auto'>
-                        {/** Mobile Layout: Location & Profile */}
-                        <div className='w-full lg:hidden flex flex-col gap-2'>
+        <header className='h-32 lg:h-24 sticky top-0 z-40 flex flex-col justify-center gap-1 bg-primary-200 text-white shadow-md'>
+            <div className='container mx-auto flex items-center px-4 justify-between h-full lg:h-auto'>
+                {/** Mobile Layout: Location & Profile */}
+                <div className='w-full lg:hidden flex flex-col gap-2'>
+                    {
+                        !isSearchPage && (
                             <div className='flex items-center justify-between w-full'>
                                 <div className='flex items-center gap-2'>
                                     <div className='text-2xl font-semibold'>kirana India</div>
                                 </div>
+                            </div>
+                        )
+                    }
+                    <div className='mt-1'>
+                        <Search />
+                    </div>
+                </div>
+
+                {/** Desktop Layout */}
+                <div className='hidden lg:flex items-center justify-between w-full'>
+                    {/**logo */}
+                    <div className='h-full'>
+                        <Link to={"/"} className='h-full flex justify-center items-center'>
+                            <img
+                                src={logo}
+                                width={170}
+                                height={60}
+                                alt='logo'
+                                className='block brightness-0 invert'
+                            />
+                        </Link>
+                    </div>
+
+                    {/**Search */}
+                    <div className='w-full max-w-xl'>
+                        <Search />
+                    </div>
+
+                    {/**login and my cart */}
+                    <div className='flex items-center gap-8'>
+                        {
+                            user?._id ? (
                                 <div className='relative'>
-                                    {
-                                        user?._id ? (
-                                            <img
-                                                src={user.avatar || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
-                                                alt='profile'
-                                                className='w-10 h-10 rounded-full border-2 border-white object-cover'
-                                                onClick={handleMobileUser}
-                                            />
-                                        ) : (
-                                            <FaRegCircleUser size={32} onClick={handleMobileUser} />
-                                        )
-                                    }
-                                </div>
-                            </div>
-                            <div className='mt-1'>
-                                <Search />
-                            </div>
-                        </div>
-
-                        {/** Desktop Layout */}
-                        <div className='hidden lg:flex items-center justify-between w-full'>
-                            {/**logo */}
-                            <div className='h-full'>
-                                <Link to={"/"} className='h-full flex justify-center items-center'>
-                                    <img
-                                        src={logo}
-                                        width={170}
-                                        height={60}
-                                        alt='logo'
-                                        className='block brightness-0 invert'
-                                    />
-                                </Link>
-                            </div>
-
-                            {/**Search */}
-                            <div className='w-full max-w-xl'>
-                                <Search />
-                            </div>
-
-                            {/**login and my cart */}
-                            <div className='flex items-center gap-8'>
-                                {
-                                    user?._id ? (
-                                        <div className='relative'>
-                                            <div onClick={() => setOpenUserMenu(preve => !preve)} className='flex select-none items-center gap-2 cursor-pointer font-medium hover:text-secondary-100 transition-colors'>
-                                                <p>Account</p>
-                                                {
-                                                    openUserMenu ? (
-                                                        <GoTriangleUp size={20} />
-                                                    ) : (
-                                                        <GoTriangleDown size={20} />
-                                                    )
-                                                }
-                                            </div>
-                                            {
-                                                openUserMenu && (
-                                                    <div className='absolute right-0 top-12 z-50'>
-                                                        <div className='bg-white rounded p-4 min-w-52 shadow-xl text-black'>
-                                                            <UserMenu close={handleCloseUserMenu} />
-                                                        </div>
-                                                    </div>
-                                                )
-                                            }
-                                        </div>
-                                    ) : (
-                                        <button onClick={redirectToLoginPage} className='text-lg px-2 font-medium hover:text-secondary-100 transition-colors'>Login</button>
-                                    )
-                                }
-                                <button onClick={() => setOpenCartSection(true)} className='flex items-center gap-3 bg-white hover:bg-gray-50 px-4 py-2 rounded-xl text-primary-200 transition-all font-bold shadow-sm'>
-                                    <div className='animate-bounce text-primary-200'>
-                                        <BsCart4 size={24} />
-                                    </div>
-                                    <div className='text-left'>
+                                    <div onClick={() => setOpenUserMenu(preve => !preve)} className='flex select-none items-center gap-2 cursor-pointer font-medium hover:text-secondary-100 transition-colors'>
+                                        <p>Account</p>
                                         {
-                                            cartItem[0] ? (
-                                                <div className='leading-tight'>
-                                                    <p className='text-xs font-normal text-gray-500'>{totalQty} Items</p>
-                                                    <p className='text-sm'>{DisplayPriceInRupees(totalPrice)}</p>
-                                                </div>
+                                            openUserMenu ? (
+                                                <GoTriangleUp size={20} />
                                             ) : (
-                                                <p className='text-sm'>My Cart</p>
+                                                <GoTriangleDown size={20} />
                                             )
                                         }
                                     </div>
-                                </button>
+                                    {
+                                        openUserMenu && (
+                                            <div className='absolute right-0 top-12 z-50'>
+                                                <div className='bg-white rounded p-4 min-w-52 shadow-xl text-black'>
+                                                    <UserMenu close={handleCloseUserMenu} />
+                                                </div>
+                                            </div>
+                                        )
+                                    }
+                                </div>
+                            ) : (
+                                <button onClick={redirectToLoginPage} className='text-lg px-2 font-medium hover:text-secondary-100 transition-colors'>Login</button>
+                            )
+                        }
+                        <button onClick={() => setOpenCartSection(true)} className='flex items-center gap-3 bg-white hover:bg-gray-50 px-4 py-2 rounded-xl text-primary-200 transition-all font-bold shadow-sm'>
+                            <div className='animate-bounce text-primary-200'>
+                                <BsCart4 size={24} />
                             </div>
-                        </div>
+                            <div className='text-left'>
+                                {
+                                    cartItem[0] ? (
+                                        <div className='leading-tight'>
+                                            <p className='text-xs font-normal text-gray-500'>{totalQty} Items</p>
+                                            <p className='text-sm'>{DisplayPriceInRupees(totalPrice)}</p>
+                                        </div>
+                                    ) : (
+                                        <p className='text-sm'>My Cart</p>
+                                    )
+                                }
+                            </div>
+                        </button>
                     </div>
-                )
-            }
+                </div>
+            </div>
 
             {
                 openCartSection && (

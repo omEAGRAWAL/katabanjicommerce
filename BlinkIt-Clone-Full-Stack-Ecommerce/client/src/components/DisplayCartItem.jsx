@@ -10,7 +10,7 @@ import { pricewithDiscount } from '../utils/PriceWithDiscount'
 import imageEmpty from '../assets/empty_cart.webp'
 import toast from 'react-hot-toast'
 
-const DisplayCartItem = ({ close }) => {
+const DisplayCartItem = ({ close, isPage }) => {
     const { notDiscountTotalPrice, totalPrice, totalQty } = useGlobalContext()
     const cartItem = useSelector(state => state.cartItem.cart)
     const user = useSelector(state => state.user)

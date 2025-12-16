@@ -33,7 +33,7 @@ const Home = () => {
 
     <section className='bg-white min-h-screen pb-20'>
       {/** Location & Search Mobile Placeholder - actually handled in Header but spacing needed */}
-      <div className='lg:hidden h-2'>dd</div>
+      <div className='lg:hidden h-2'></div>
 
       {/** Banner Section - Replacing grid with single promo banner */}
       <div className='container mx-auto px-2 mt-1'>
@@ -43,7 +43,7 @@ const Home = () => {
             className='w-full h-full object-cover hidden lg:block'
             alt='banner' />
           <img
-            src={bannerMobile}
+            src={banner}
             className='w-full h-full object-cover lg:hidden'
             alt='banner'
           />
@@ -80,14 +80,14 @@ const Home = () => {
                   className='flex flex-col items-center gap-2 min-w-[80px] cursor-pointer group'
                   onClick={() => handleRedirectProductListpage(cat._id, cat.name)}
                 >
-                  <div className='w-14 h-14 bg-blue-50/50 rounded-full flex items-center justify-center  border border-gray-100 group-hover:border-primary-100 transition-colors shadow-sm overflow-hidden'>
+                  <div className='w-16 h-16 bg-blue-50/50 rounded-full flex items-center justify-center  border border-gray-100 group-hover:border-primary-100 transition-colors shadow-sm overflow-hidden'>
                     <img
                       src={cat.image}
                       className='w-full h-full '
                       alt={cat.name}
                     />
                   </div>
-                  <p className='text-xs font-semibold text-center text-gray-700 leading-tight w-20 break-words line-clamp-2'>{cat.name}</p>
+                  <p className='text-sm font-semibold text-center text-gray-700 leading-tight w-20 break-words line-clamp-2'>{cat.name}</p>
                 </motion.div>
               ))
             )

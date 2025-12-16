@@ -8,11 +8,15 @@ import useMobile from '../hooks/useMobile';
 
 const Search = () => {
     const navigate = useNavigate()
-    const location = useLocation()
     const [isSearchPage, setIsSearchPage] = useState(false)
     const [isMobile] = useMobile()
-    const params = useLocation()
-    const searchText = params.search.slice(3)
+    const location = useLocation()
+    const [searchText, setSearchText] = useState("")
+
+    useEffect(() => {
+        const query = new URLSearchParams(location.search).get('q')
+        setSearchText(query || "")
+    }, [location])
 
     useEffect(() => {
         const isSearch = location.pathname === "/search"
@@ -26,8 +30,8 @@ const Search = () => {
 
     const handleOnChange = (e) => {
         const value = e.target.value
-        const url = `/search?q=${value}`
-        navigate(url)
+        setSearchText(value)
+        navigate(`/search?q=${value}`)
     }
 
     return (
@@ -49,7 +53,7 @@ const Search = () => {
                 {
                     !isSearchPage ? (
                         //not in search page
-                        <div onClick={redirectToSearchPage} className='w-full h-full flex items-center'>
+                        <div onClick={redirectToSearchPage} className='w-full h-full flex items-center cursor-pointer'>
                             <TypeAnimation
                                 sequence={[
                                     // Same substring at the start will only be typed out once, initially
@@ -70,6 +74,7 @@ const Search = () => {
                                     'Search "egg"',
                                     1000,
                                     'Search "chips"',
+                                    1000,
                                 ]}
                                 wrapper="span"
                                 speed={50}
@@ -82,10 +87,11 @@ const Search = () => {
                             <input
                                 type='text'
                                 placeholder='Search for atta dal and more.'
-                                autoFocus
+                                autoFocus={true}
                                 defaultValue={searchText}
                                 className='bg-transparent w-full h-full outline-none'
                                 onChange={handleOnChange}
+                                autoComplete='off'
                             />
                         </div>
                     )
