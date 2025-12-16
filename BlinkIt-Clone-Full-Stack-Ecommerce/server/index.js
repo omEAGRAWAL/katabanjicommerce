@@ -70,6 +70,10 @@ app.use("/api/cart", cartRouter);
 app.use("/api/address", addressRouter);
 app.use("/api/order", orderRouter);
 
+app.get("/api/ping", (req, res) => {
+  res.status(200).json({ message: "pong" });
+});
+
 /* ------------------ SERVE VITE DIST ------------------ */
 // const clientDistPath = path.join(__dirname, "../client/dist");
 
@@ -91,5 +95,15 @@ const PORT = process.env.PORT || 8080;
 connectDB().then(() => {
   app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
+
+    // Self-ping to keep alive
+    setInterval(async () => {
+      try {
+        const response = await fetch(`http://localhost:${PORT}/api/ping`);
+        console.log(`Ping successful: ${response.status}`);
+      } catch (error) {
+        console.error("Ping failed:", error.message);
+      }
+    }, 13 * 60 * 1000); // 14 minutes
   });
 });
