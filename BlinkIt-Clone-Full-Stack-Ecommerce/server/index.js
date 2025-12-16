@@ -104,6 +104,6 @@ connectDB().then(() => {
       } catch (error) {
         console.error("Ping failed:", error.message);
       }
-    }, 13 * 60 * 1000); // 14 minutes
+    }, 5 * 60 * 1000); // 14 minutes
   });
 });
