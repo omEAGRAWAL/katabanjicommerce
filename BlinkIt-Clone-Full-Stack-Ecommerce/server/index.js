@@ -83,10 +83,10 @@ app.get("/api/ping", (req, res) => {
 // app.get("*", (req, res) => {
 //   res.sendFile(path.join(clientDistPath, "index.html"));
 // });
-app.use(express.static(path.join(__dirname, "/dist")));
+app.use(express.static(path.join(__dirname, "../client/dist")));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "/dist/index.html"));
+  res.sendFile(path.join(__dirname, "../client/dist/index.html"));
 });
 
 /* ------------------ START SERVER ------------------ */
@@ -97,13 +97,20 @@ connectDB().then(() => {
     console.log(`🚀 Server running on port ${PORT}`);
 
     // Self-ping to keep alive
+    const SELF_URL = process.env.SELF_URL || `https://scanqrgo.onrender.com`;
+
+    console.log("Self-ping enabled → keeping Render awake");
+
     setInterval(async () => {
       try {
-        const response = await fetch(`http://localhost:${PORT}/api/ping`);
-        console.log(`Ping successful: ${response.status}`);
-      } catch (error) {
-        console.error("Ping failed:", error.message);
+        await axios.get(`${SELF_URL}/health`);
+        // console.log("Self-ping OK:", new Date().toISOString());
+      } catch (err) {
+        console.log("Self-ping FAILED:", err.message);
       }
-    }, 5 * 60 * 1000); // 14 minutes
+    }, 1 * 60 * 1000); // every 5 minutes
+
+
   });
 });
+

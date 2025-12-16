@@ -2,6 +2,7 @@ import Stripe from "../config/stripe.js";
 import CartProductModel from "../models/cartproduct.model.js";
 import OrderModel from "../models/order.model.js";
 import UserModel from "../models/user.model.js";
+import AddressModel from "../models/address.model.js";
 import mongoose from "mongoose";
 
 export async function CashOnDeliveryOrderController(request, response) {
@@ -16,32 +17,38 @@ export async function CashOnDeliveryOrderController(request, response) {
       });
     }
 
-    const payload = list_items.map((el) => {
+    const address = await AddressModel.findById(addressId);
+
+    const product_details = list_items.map((el) => {
       let variantDetails = null;
       if (el.variantId) {
         variantDetails = el.productId.variants.find(v => v._id.toString() === el.variantId.toString());
       }
       return {
-        userId: userId,
-        orderId: `ORD-${new mongoose.Types.ObjectId()}`,
         productId: el.productId._id,
-        product_details: {
-          name: el.productId.name,
-          image: el.productId.image,
-          variant: variantDetails ? {
-            name: variantDetails.name,
-            price: variantDetails.price
-          } : null
-        },
-        paymentId: "",
-        payment_status: "CASH ON DELIVERY",
-        delivery_address: addressId,
-        subTotalAmt: subTotalAmt,
-        totalAmt: totalAmt,
+        name: el.productId.name,
+        image: el.productId.image,
+        variant: variantDetails ? {
+          name: variantDetails.name,
+          price: variantDetails.price
+        } : null,
+        quantity: el.quantity,
+        price: el.productId.price // Base price or variant price if handled elsewhere, but structure requests array
       };
     });
 
-    const generatedOrder = await OrderModel.insertMany(payload);
+    const payload = {
+      userId: userId,
+      orderId: `ORD-${new mongoose.Types.ObjectId()}`,
+      product_details: product_details,
+      paymentId: "",
+      payment_status: "CASH ON DELIVERY",
+      delivery_address: address,
+      subTotalAmt: subTotalAmt,
+      totalAmt: totalAmt,
+    };
+
+    const generatedOrder = await OrderModel.create(payload);
 
     ///remove from the cart
     const removeCartItems = await CartProductModel.deleteMany({
@@ -152,52 +159,39 @@ const getOrderProductItems = async ({
   paymentId,
   payment_status,
 }) => {
-  const productList = [];
+  const product_details = [];
+  const address = await AddressModel.findById(addressId);
 
   if (lineItems?.data?.length) {
     for (const item of lineItems.data) {
       const product = await Stripe.products.retrieve(item.price.product);
 
-      let variantDetails = null;
-      if (product.metadata.variantId) {
-        variantDetails = {
-          name: product.name.replace(/.*\((.*)\)/, '$1'), // Attempt to extract variant name from "Product (Variant)"
-          // ideally we should probably fetch the product to get clean variant details, but saving what we sent to stripe is also fine.
-          // For now, let's just store the name as is or try to be cleaner.
-          // Actually, since we stored productId, we can fetch the product text if we wanted, 
-          // but for now let's just use the metadata and name.
-          // If we want to be precise, we need to fetch ProductModel here to get original Variant Data? 
-          // Or just rely on what we sent.
-          // The existing code re-fetches nothing, just uses Stripe data.
-          // Let's stick to using Stripe data.
-          // We sent "Name (Variant)" as name.
-        }
-      }
-
-      const paylod = {
-        userId: userId,
-        orderId: `ORD-${new mongoose.Types.ObjectId()}`,
+      product_details.push({
         productId: product.metadata.productId,
-        product_details: {
+        name: product.name,
+        image: product.images,
+        variant: product.metadata.variantId ? {
           name: product.name,
-          image: product.images,
-          variant: product.metadata.variantId ? {
-            name: product.name, // Stripe product name has variant info
-            price: item.amount_total / 100 / item.quantity // Calculated unit price
-          } : null
-        },
-        paymentId: paymentId,
-        payment_status: payment_status,
-        delivery_address: addressId,
-        subTotalAmt: Number(item.amount_total / 100),
-        totalAmt: Number(item.amount_total / 100),
-      };
-
-      productList.push(paylod);
+          price: item.amount_total / 100 / item.quantity
+        } : null,
+        quantity: item.quantity,
+        price: item.price.unit_amount / 100
+      });
     }
   }
 
-  return productList;
+  const payload = {
+    userId: userId,
+    orderId: `ORD-${new mongoose.Types.ObjectId()}`,
+    product_details: product_details,
+    paymentId: paymentId,
+    payment_status: payment_status,
+    delivery_address: address,
+    subTotalAmt: Number(lineItems.data.reduce((acc, item) => acc + item.amount_total, 0) / 100),
+    totalAmt: Number(lineItems.data.reduce((acc, item) => acc + item.amount_total, 0) / 100),
+  };
+
+  return [payload];
 };
 
 //http://localhost:8080/api/order/webhook
@@ -249,7 +243,6 @@ export async function getOrderDetailsController(request, response) {
 
     const orderlist = await OrderModel.find({ userId: userId })
       .sort({ createdAt: -1 })
-      .populate("delivery_address");
 
     return response.json({
       message: "order list",

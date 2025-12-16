@@ -83,22 +83,24 @@ const CategoryPage = () => {
       </div>
       {!categoryData[0] && !loading && <NoData />}
 
-      <div className="p-4 grid  grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
+      <div className="p-4 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
         {categoryData.map((category, index) => {
           return (
-            <div className="w-32 h-56 rounded shadow-md" key={category._id}>
-              <img
-                alt={category.name}
-                src={category.image}
-                className="w-full object-scale-down"
-              />
-              <div className="items-center h-9 flex gap-2">
+            <div className="group bg-white rounded shadow-md overflow-hidden flex flex-col" key={category._id}>
+              <div className="aspect-[4/3] w-full p-2">
+                <img
+                  alt={category.name}
+                  src={category.image}
+                  className="w-full h-full object-scale-down transform transition-transform group-hover:scale-110"
+                />
+              </div>
+              <div className="p-3 flex gap-2">
                 <button
                   onClick={() => {
                     setOpenEdit(true);
                     setEditData(category);
                   }}
-                  className="flex-1 bg-green-100 hover:bg-green-200 text-green-600 font-medium py-1 rounded"
+                  className="flex-1 bg-green-100 hover:bg-green-200 text-green-600 font-medium py-1.5 rounded text-sm transition-colors"
                 >
                   Edit
                 </button>
@@ -107,7 +109,7 @@ const CategoryPage = () => {
                     setOpenConfirmBoxDelete(true);
                     setDeleteCategory(category);
                   }}
-                  className="flex-1 bg-red-100 hover:bg-red-200 text-red-600 font-medium py-1 rounded"
+                  className="flex-1 bg-red-100 hover:bg-red-200 text-red-600 font-medium py-1.5 rounded text-sm transition-colors"
                 >
                   Delete
                 </button>

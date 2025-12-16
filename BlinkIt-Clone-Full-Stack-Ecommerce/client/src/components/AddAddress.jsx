@@ -8,7 +8,19 @@ import { useGlobalContext } from "../provider/GlobalProvider";
 import { motion } from "framer-motion"
 
 const AddAddress = ({ close }) => {
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset } = useForm({
+    defaultValues: {
+      addressline: "",
+      city: "Kantabanji",
+      state: "Orissa",
+      pincode: "767039",
+      country: "India",
+      mobile: "",
+      name: "",
+      landmark: "",
+      area: ""
+    }
+  });
   const { fetchAddress } = useGlobalContext();
 
   const onSubmit = async (data) => {
@@ -18,12 +30,15 @@ const AddAddress = ({ close }) => {
       const response = await Axios({
         ...SummaryApi.createAddress,
         data: {
+          name: data.name,
           address_line: data.addressline,
           city: data.city,
           state: data.state,
           country: data.country,
           pincode: data.pincode,
           mobile: data.mobile,
+          landmark: data.landmark,
+          area: data.area,
         },
       });
 
@@ -87,12 +102,15 @@ const AddAddress = ({ close }) => {
             const response = await Axios({
               ...SummaryApi.createAddress,
               data: {
+                name: data.name,
                 address_line: data.addressline,
                 city: data.city,
                 state: data.state,
                 country: data.country,
                 pincode: data.pincode,
                 mobile: data.mobile,
+                landmark: data.landmark,
+                area: data.area,
                 lat: lat,
                 lon: lon
               },
@@ -114,6 +132,17 @@ const AddAddress = ({ close }) => {
         })}>
           <input type="hidden" id="lat" />
           <input type="hidden" id="lon" />
+
+          <div className="grid gap-1">
+            <label htmlFor="name" className="text-sm font-semibold text-gray-800">Name</label>
+            <input
+              type="text"
+              id="name"
+              className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-primary-200 focus:ring-2 focus:ring-primary-200/20 transition-all font-semibold"
+              {...register("name", { required: true })}
+            />
+          </div>
+
           <div className="grid gap-1">
             <label htmlFor="addressline" className="text-sm font-semibold text-gray-800">Address Line</label>
             <input
@@ -124,6 +153,27 @@ const AddAddress = ({ close }) => {
               {...register("addressline", { required: true })}
             />
           </div>
+
+          <div className="grid gap-1">
+            <label htmlFor="area" className="text-sm font-semibold text-gray-800">Area</label>
+            <input
+              type="text"
+              id="area"
+              className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-primary-200 focus:ring-2 focus:ring-primary-200/20 transition-all font-semibold"
+              {...register("area")}
+            />
+          </div>
+
+          <div className="grid gap-1">
+            <label htmlFor="landmark" className="text-sm font-semibold text-gray-800">Landmark</label>
+            <input
+              type="text"
+              id="landmark"
+              className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-primary-200 focus:ring-2 focus:ring-primary-200/20 transition-all font-semibold"
+              {...register("landmark")}
+            />
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-1">
               <label htmlFor="city" className="text-sm font-semibold text-gray-800">City</label>

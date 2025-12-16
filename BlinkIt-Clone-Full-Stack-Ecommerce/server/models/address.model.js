@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const addressSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        default: ""
+    },
     address_line: {
         type: String,
         default: ""
@@ -22,6 +26,14 @@ const addressSchema = new mongoose.Schema({
     mobile: {
         type: Number,
         default: null
+    },
+    landmark: {
+        type: String,
+        default: ""
+    },
+    area: {
+        type: String,
+        default: ""
     },
     lat: {
         type: Number,

@@ -58,7 +58,7 @@ export const createProductController = async (request, response) => {
 export const getProductController = async (request, response) => {
     try {
 
-        let { page, limit, search } = request.body
+        let { page, limit, search, category } = request.body
 
         if (!page) {
             page = 1
@@ -68,11 +68,17 @@ export const getProductController = async (request, response) => {
             limit = 10
         }
 
-        const query = search ? {
-            $text: {
+        const query = {}
+
+        if (search) {
+            query.$text = {
                 $search: search
             }
-        } : {}
+        }
+
+        if (category) {
+            query.category = { $in: category }
+        }
 
         const skip = (page - 1) * limit
 
