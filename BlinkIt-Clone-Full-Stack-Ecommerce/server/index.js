@@ -97,18 +97,20 @@ connectDB().then(() => {
     console.log(`🚀 Server running on port ${PORT}`);
 
     // Self-ping to keep alive
-    const SELF_URL = process.env.SELF_URL || `https://scanqrgo.onrender.com`;
+    const SELF_URL = process.env.SELF_URL || `https://katabanjicommerce-2.onrender.com`;
 
-    console.log("Self-ping enabled → keeping Render awake");
 
     setInterval(async () => {
       try {
-        await axios.get(`${SELF_URL}/health`);
-        // console.log("Self-ping OK:", new Date().toISOString());
+        // await   (`${SELF_URL}/api/ping`);
+        // await axios.get(`${SELF_URL}/api/ping`);//run without axios
+        await fetch(`${SELF_URL}/api/ping`);
+
+        console.log("Self-ping OK:", new Date().toISOString());
       } catch (err) {
         console.log("Self-ping FAILED:", err.message);
       }
-    }, 1 * 60 * 1000); // every 5 minutes
+    }, 5 * 60 * 1000); // every 5 minutes
 
 
   });
