@@ -179,14 +179,8 @@ const Login = () => {
                     </div>
 
                     <div className="flex justify-center gap-6 mt-4">
-                        <button type='button' className="w-12 h-12 bg-white rounded-full shadow-md border border-gray-100 flex items-center justify-center hover:bg-gray-50 transition-colors">
-                            <FaFacebook className="text-blue-600 text-2xl" />
-                        </button>
                         <button type='button' onClick={handleGoogleLogin} className="w-12 h-12 bg-white rounded-full shadow-md border border-gray-100 flex items-center justify-center hover:bg-gray-50 transition-colors">
                             <FcGoogle className="text-2xl" />
-                        </button>
-                        <button type='button' className="w-12 h-12 bg-white rounded-full shadow-md border border-gray-100 flex items-center justify-center hover:bg-gray-50 transition-colors">
-                            <MdEmail className="text-red-500 text-2xl" />
                         </button>
                     </div>
 
