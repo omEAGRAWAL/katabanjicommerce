@@ -40,6 +40,7 @@ app.use(morgan("dev"));
 app.use(
   helmet({
     crossOriginResourcePolicy: false,
+    crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
     contentSecurityPolicy: {
       useDefaults: false,
       directives: {

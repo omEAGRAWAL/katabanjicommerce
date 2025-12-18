@@ -16,7 +16,7 @@ const CardProduct = ({ data }) => {
   const [loading, setLoading] = useState(false)
 
   return (
-    <Link to={url} className='border border-gray-100 py-3 p-3 grid gap-2 min-w-[160px] lg:min-w-[190px] rounded-xl cursor-pointer bg-white shadow-sm hover:shadow-premium-hover transition-shadow h-full' >
+    <Link to={url} className='border border-gray-100 py-3 p-3 grid gap-2 w-full rounded-xl cursor-pointer bg-white shadow-sm hover:shadow-premium-hover transition-shadow h-full' >
       <div className='bg-slate-50 min-h-28 w-full max-h-32 rounded-lg overflow-hidden flex items-center justify-center p-2'>
         <img
           src={data.image[0]}
