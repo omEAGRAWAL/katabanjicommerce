@@ -16,49 +16,67 @@ const CardProduct = ({ data }) => {
   const [loading, setLoading] = useState(false)
 
   return (
-    <Link to={url} className='border border-gray-100 py-3 p-3 grid gap-2 w-full rounded-xl cursor-pointer bg-white shadow-sm hover:shadow-premium-hover transition-shadow h-full' >
-      <div className='bg-slate-50 min-h-28 w-full max-h-32 rounded-lg overflow-hidden flex items-center justify-center p-2'>
+    <Link
+      to={url}
+      className='border border-gray-200 rounded-xl cursor-pointer bg-white shadow-sm hover:shadow-lg active:shadow-md transition-all duration-200 h-full flex flex-col overflow-hidden touch-manipulation'
+    >
+      {/* Image Container */}
+      <div className='bg-slate-50 aspect-square w-full overflow-hidden relative'>
+        {data.discount > 0 && (
+          <div className='absolute top-1.5 left-1.5 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded z-10'>
+            {data.discount}% OFF
+          </div>
+        )}
         <img
           src={data.image[0]}
-          className='w-full h-full object-contain hover:scale-110 transition-transform duration-300'
+          alt={data.name}
+          className='w-full h-full object-contain hover:scale-105 transition-transform duration-300 p-2'
         />
       </div>
 
-      <div className='flex items-center justify-between gap-1'>
-        <div className='rounded-md text-[10px] font-bold px-1.5 py-0.5 text-gray-700 bg-gray-100 flex items-center gap-1'>
-          <span className='w-3 h-3 bg-gray-300 rounded-full flex items-center justify-center text-[8px]'>🕒</span> 12 mins
+      {/* Content Container */}
+      <div className='p-2.5 flex flex-col gap-1.5 flex-1'>
+        {/* Delivery Time Badge */}
+        <div className='inline-flex items-center gap-0.5 rounded-full text-[9px] font-semibold px-1.5 py-0.5 text-emerald-700 bg-emerald-50 border border-emerald-200 w-fit'>
+          <span className='text-[9px]'>🕒</span>
+          <span>12 mins</span>
         </div>
-      </div>
 
-      <div className='font-semibold text-gray-800 text-sm line-clamp-2 leading-tight h-10'>
-        {data.name}
-      </div>
+        {/* Product Name */}
+        <div className='font-semibold text-gray-900 text-xs line-clamp-2 leading-tight min-h-[2rem]'>
+          {data.name}
+        </div>
 
-      <div className='text-xs text-gray-500'>
-        {data.unit}
-      </div>
+        {/* Unit */}
+        <div className='text-[10px] text-gray-500 font-medium'>
+          {data.unit}
+        </div>
 
-      <div className='flex items-center justify-between gap-2 mt-1'>
-        <div className='flex flex-col'>
-          <div className='font-semibold text-sm text-gray-800'>
+        {/* Pricing Section */}
+        <div className='flex items-center gap-1.5 mt-auto'>
+          <div className='font-bold text-sm text-gray-900'>
             {DisplayPriceInRupees(pricewithDiscount(data.price, data.discount))}
           </div>
           {Boolean(data.discount) && (
-            <p className='text-xs text-gray-400 line-through'>{DisplayPriceInRupees(data.price)}</p>
+            <div className='text-[10px] text-gray-400 line-through'>
+              {DisplayPriceInRupees(data.price)}
+            </div>
           )}
         </div>
 
-        <div className=''>
+        {/* Add to Cart Button */}
+        <div className='mt-1.5' onClick={(e) => e.preventDefault()}>
           {
             data.stock == 0 ? (
-              <p className='text-red-500 text-xs font-bold bg-red-50 px-2 py-1 rounded-md border border-red-100'>Out of stock</p>
+              <div className='w-full text-center text-red-600 text-[10px] font-bold bg-red-50 px-2 py-1.5 rounded-lg border border-red-200'>
+                Out of Stock
+              </div>
             ) : (
               <AddToCartButton data={data} />
             )
           }
         </div>
       </div>
-
     </Link>
   )
 }

@@ -9,7 +9,7 @@ import AxiosToastError from '../utils/AxiosToastError';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion";
 import { auth, googleProvider } from '../firebase'
-import { signInWithPopup } from 'firebase/auth'
+import { signInWithRedirect } from 'firebase/auth'
 import { useDispatch } from 'react-redux';
 
 const Register = () => {
@@ -40,7 +40,7 @@ const Register = () => {
     const handleGoogleLogin = async (e) => {
         e.preventDefault()
         try {
-            const result = await signInWithPopup(auth, googleProvider)
+            const result = await signInWithRedirect(auth, googleProvider)
             const user = result.user
 
             const response = await Axios({

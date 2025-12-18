@@ -50,10 +50,6 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
         containerRef.current.scrollLeft -= 200
     }
 
-
-
-
-
     const handleRedirectProductListpage = () => {
         const subcategory = subCategoryData.find(sub => {
             const filterData = sub.category.some(c => {
@@ -68,40 +64,75 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
     }
 
     const redirectURL = handleRedirectProductListpage()
+
     return (
-        <div>
-            <div className='container mx-auto p-4 flex items-center justify-between gap-4'>
-                <h3 className='font-semibold text-lg md:text-xl text-gray-900'>{name}</h3>
-                <Link to={redirectURL} className='text-green-600 hover:text-green-400'>See All</Link>
+        <div className='py-4'>
+            {/* Header Section */}
+            <div className='container mx-auto px-4 mb-3 flex items-center justify-between gap-4'>
+                <h3 className='font-bold text-base md:text-lg lg:text-xl text-gray-900 truncate'>
+                    {name}
+                </h3>
+                <Link
+                    to={redirectURL}
+                    className='text-emerald-600 hover:text-emerald-500 font-semibold text-sm md:text-base whitespace-nowrap active:scale-95 transition-transform touch-manipulation'
+                >
+                    See All
+                </Link>
             </div>
-            <div className='relative flex items-center '>
-                <div className=' grid grid-flow-col auto-cols-[190px] md:auto-cols-[230px] lg:auto-cols-[250px] gap-4 md:gap-6 lg:gap-8 container mx-auto px-4 overflow-x-scroll scrollbar-none scroll-smooth' ref={containerRef}>
+
+            {/* Products Scroll Container */}
+            <div className='relative'>
+                <div
+                    className='flex gap-3 md:gap-4 lg:gap-5 container mx-auto px-4 overflow-x-auto scrollbar-hide scroll-smooth snap-x snap-mandatory'
+                    ref={containerRef}
+                    style={{
+                        scrollbarWidth: 'none',
+                        msOverflowStyle: 'none',
+                        WebkitOverflowScrolling: 'touch'
+                    }}
+                >
                     {loading &&
                         loadingCardNumber.map((_, index) => {
                             return (
-                                <CardLoading key={"CategorywiseProductDisplay123" + index} />
+                                <div
+                                    key={"CategorywiseProductDisplay123" + index}
+                                    className='flex-none w-[160px] md:w-[200px] lg:w-[220px] snap-start'
+                                >
+                                    <CardLoading />
+                                </div>
                             )
                         })
                     }
-
 
                     {
                         data.map((p, index) => {
                             return (
-                                <CardProduct
-                                    data={p}
+                                <div
                                     key={p._id + "CategorywiseProductDisplay" + index}
-                                />
+                                    className='flex-none w-[160px] md:w-[200px] lg:w-[220px] snap-start'
+                                >
+                                    <CardProduct data={p} />
+                                </div>
                             )
                         })
                     }
 
+                    {/* Spacer for better scroll ending */}
+                    {data.length > 0 && <div className='flex-none w-1'></div>}
                 </div>
-                <div className='w-full left-0 right-0 container mx-auto  px-2  absolute hidden lg:flex justify-between'>
-                    <button onClick={handleScrollLeft} className='z-10 relative bg-white hover:bg-gray-100 shadow-lg text-lg p-2 rounded-full'>
+
+                {/* Desktop Navigation Buttons */}
+                <div className='w-full left-0 right-0 container mx-auto px-2 absolute top-1/2 -translate-y-1/2 hidden lg:flex justify-between pointer-events-none'>
+                    <button
+                        onClick={handleScrollLeft}
+                        className='pointer-events-auto z-10 bg-white hover:bg-gray-50 active:bg-gray-100 shadow-lg text-lg p-3 rounded-full transition-all duration-200 hover:scale-110 active:scale-95'
+                    >
                         <FaAngleLeft />
                     </button>
-                    <button onClick={handleScrollRight} className='z-10 relative  bg-white hover:bg-gray-100 shadow-lg p-2 text-lg rounded-full'>
+                    <button
+                        onClick={handleScrollRight}
+                        className='pointer-events-auto z-10 bg-white hover:bg-gray-50 active:bg-gray-100 shadow-lg p-3 text-lg rounded-full transition-all duration-200 hover:scale-110 active:scale-95'
+                    >
                         <FaAngleRight />
                     </button>
                 </div>
