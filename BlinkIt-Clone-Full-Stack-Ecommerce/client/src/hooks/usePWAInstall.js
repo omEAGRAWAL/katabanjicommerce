@@ -6,7 +6,7 @@ export default function usePWAInstall() {
 
   useEffect(() => {
     const handler = (e) => {
-      e.preventDefault();
+      // e.preventDefault(); // Removed to allow browser default prompt
       setPromptEvent(e);
     };
 
