@@ -40,7 +40,7 @@ app.use(morgan("dev"));
 app.use(
   helmet({
     crossOriginResourcePolicy: false,
-    crossOriginOpenerPolicy: false,
+    crossOriginOpenerPolicy: { policy: "unsafe-none" },
     crossOriginEmbedderPolicy: false,
     contentSecurityPolicy: {
       useDefaults: false,
