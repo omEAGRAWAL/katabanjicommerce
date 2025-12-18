@@ -152,7 +152,8 @@ export async function googleLogin(request, response) {
         const cookiesOption = {
             httpOnly: true,
             secure: true,
-            sameSite: "None"
+            sameSite: "None",
+            maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
         }
         response.cookie('accessToken', accesstoken, cookiesOption)
         response.cookie('refreshToken', refreshToken, cookiesOption)
@@ -228,7 +229,8 @@ export async function loginController(request, response) {
         const cookiesOption = {
             httpOnly: true,
             secure: true,
-            sameSite: "None"
+            sameSite: "None",
+            maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
         }
         response.cookie('accessToken', accesstoken, cookiesOption)
         response.cookie('refreshToken', refreshToken, cookiesOption)
@@ -545,7 +547,8 @@ export async function refreshToken(request, response) {
         const cookiesOption = {
             httpOnly: true,
             secure: true,
-            sameSite: "None"
+            sameSite: "None",
+            maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
         }
 
         response.cookie('accessToken', newAccessToken, cookiesOption)
