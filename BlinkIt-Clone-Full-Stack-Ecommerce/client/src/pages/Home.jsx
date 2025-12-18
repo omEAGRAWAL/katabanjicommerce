@@ -230,7 +230,7 @@ const Home = () => {
       </div>
 
       {/* Special Offers Banner - Optional */}
-      <div className='container mx-auto px-4 mt-8'>
+      {/* <div className='container mx-auto px-4 mt-8'>
         <div className='bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl p-6 md:p-8 text-white shadow-lg'>
           <div className='flex items-center justify-between flex-wrap gap-4'>
             <div>
@@ -242,10 +242,10 @@ const Home = () => {
             </button>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Products by Category Sections */}
-      <div className='mt-8 md:mt-12 space-y-8 md:space-y-12'>
+      <div className='mt-8 md:mt-12 space-y-8 md:space-y-12 pl-2 pr-2'>
         {categoryData?.map((c, index) => (
           <div
             key={c?._id + "CategoryProductSection"}

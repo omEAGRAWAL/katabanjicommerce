@@ -149,7 +149,7 @@ const CheckoutPage = () => {
           <h3 className='text-lg font-bold text-gray-900 mb-4'>Payment Method</h3>
 
           <div className='space-y-3'>
-            <button
+            {/* <button
               onClick={handleOnlinePayment}
               className='w-full border rounded-xl p-4 flex items-center justify-between hover:bg-gray-50 transition-colors group'
             >
@@ -162,7 +162,7 @@ const CheckoutPage = () => {
                   <p className='text-xs text-gray-500'>Cards, UPI, Netbanking</p>
                 </div>
               </div>
-            </button>
+            </button> */}
 
             <button
               onClick={handleCashOnDelivery}

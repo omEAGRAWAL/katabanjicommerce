@@ -86,14 +86,14 @@ function App() {
       <main className="min-h-[78vh] pb-32 lg:pb-0">
         <Outlet />
       </main>
-      <Footer />
-      <Toaster />
-      {location.pathname !== "/checkout" && <CartMobileLink />}
+
+      {/* <Toaster /> */}
+      {/* {location.pathname !== "/checkout" && <CartMobileLink />} */}
       <>
-        <InstallAppButton />
+        {/* <InstallAppButton /> */}
         {/* rest of your app */}
       </>
-      <BottomNavigation />
+      {/* <BottomNavigation /> */}
     </GlobalProvider>
   );
 }
