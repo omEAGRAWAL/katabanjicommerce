@@ -341,11 +341,9 @@ const Header = () => {
                         </div>
 
                         {/* Search Bar */}
-                        {!isSearchPage && (
-                            <div className='mb-2'>
-                                <Search />
-                            </div>
-                        )}
+                        <div className='mb-2'>
+                            <Search />
+                        </div>
 
                         {/* Location */}
                         {/* <div className='flex items-center gap-2 text-sm text-gray-600'>

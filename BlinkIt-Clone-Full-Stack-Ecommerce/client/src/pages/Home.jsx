@@ -148,7 +148,7 @@ const Home = () => {
   return (
     <section className='bg-gradient-to-b from-gray-50 to-white min-h-screen pb-20'>
       {/* Hero Banner Section */}
-      <div className='container mx-auto px-4 pt-4 md:pt-6'>
+      <div className='container mx-auto px-4  md:pt-6'>
         <div className='relative w-full rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300'>
           {/* Desktop Banner */}
           <div className='hidden lg:block'>
@@ -160,72 +160,64 @@ const Home = () => {
           </div>
 
           {/* Mobile Banner */}
-          <div className='lg:hidden'>
+          {/* <div className='lg:hidden'>
             <img
               src={banner}
-              className='w-full h-[180px] object-cover'
+              className='w-full h-[160px] object-cover'
               alt='banner'
             />
-          </div>
-
-          {/* Optional Overlay Content */}
-          {/* <div className='absolute inset-0 bg-gradient-to-r from-black/40 to-transparent flex items-center'>
-            <div className='container mx-auto px-8'>
-              <div className='max-w-lg'>
-                <h1 className='text-white text-3xl md:text-5xl font-bold mb-4'>Fresh Groceries Delivered</h1>
-                <p className='text-white/90 text-lg mb-6'>Get fresh produce at your doorstep in 12 minutes</p>
-                <button className='bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors'>
-                  Shop Now
-                </button>
-              </div>
-            </div>
           </div> */}
         </div>
       </div>
 
       {/* Categories Section */}
-      <div className='container mx-auto px-4 mt-8 md:mt-12'>
+      <div className='container mx-auto px-4 mt-2 md:mt-12'>
         <div className='flex items-center justify-between mb-5'>
           <div>
             <h2 className='text-xl md:text-2xl font-bold text-gray-900'>Shop by Category</h2>
-            <p className='text-sm text-gray-500 mt-1'>Browse through our wide range of categories</p>
           </div>
         </div>
 
-        {/* Categories Scroll */}
-        <div className='relative'>
-          <div className='flex gap-4 md:gap-6 overflow-x-auto scrollbar-hide pb-4 snap-x snap-mandatory scroll-smooth'>
-            {loadingCategory ? (
-              new Array(10).fill(null).map((c, index) => (
-                <div key={index + "loading"} className='flex flex-col items-center gap-2 min-w-[90px] snap-start'>
-                  <div className='w-20 h-20 bg-gray-200 rounded-full animate-pulse'></div>
-                  <div className='w-16 h-3 bg-gray-200 rounded animate-pulse'></div>
+        {/* Categories Grid */}
+        <div className='grid grid-cols-3 gap-2 md:gap-3'>
+          {loadingCategory ? (
+            new Array(12).fill(null).map((c, index) => (
+              <div key={index + "loading"} className='bg-white rounded-xl border border-gray-200 overflow-hidden animate-pulse h-[15vh] min-h-[120px]'>
+                <div className='h-[70%] bg-gray-200'></div>
+                <div className='p-2 h-[30%] flex items-center justify-center'>
+                  <div className='h-3 bg-gray-200 rounded w-2/3'></div>
                 </div>
-              ))
-            ) : (
-              categoryData.map((cat, index) => (
-                <motion.div
-                  key={cat._id + "display"}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.3, delay: index * 0.05 }}
-                  className='flex flex-col items-center gap-3 min-w-[90px] snap-start cursor-pointer group'
-                  onClick={() => handleRedirectProductListpage(cat._id, cat.name)}
-                >
-                  <div className='w-20 h-20 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-full flex items-center justify-center border-2 border-emerald-200 group-hover:border-emerald-400 group-hover:shadow-lg transition-all duration-300 overflow-hidden group-hover:scale-110'>
-                    <img
-                      src={cat.image}
-                      className='w-full h-full object-cover'
-                      alt={cat.name}
-                    />
+              </div>
+            ))
+          ) : (
+            categoryData.map((cat, index) => (
+              <div
+                key={cat._id + "display"}
+                className='bg-white rounded-xl border border-gray-200 overflow-hidden cursor-pointer group shadow-lg border-emerald-300 transition-all duration-300 h-[15vh] min-h-[120px] flex flex-col'
+                onClick={() => handleRedirectProductListpage(cat._id, cat.name)}
+              >
+                {/* Image Container */}
+                <div className='h-[70%] rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 p-2 md:p-3 relative overflow-hidden group-hover:from-emerald-50 group-hover:to-emerald-100 transition-all duration-300'>
+                  <img
+                    src={cat.image}
+                    className='w-full h-full object-contain group-hover:scale-110 transition-transform duration-300'
+                    alt={cat.name}
+                  />
+                  {/* "+X more" badge */}
+                  <div className='absolute top-1 left-1 bg-white/90 backdrop-blur-sm px-1.5 py-0.5 rounded-full text-[10px] md:text-xs font-semibold text-gray-700 shadow-sm'>
+                    +10 more
                   </div>
-                  <p className='text-xs md:text-sm font-semibold text-center text-gray-700 group-hover:text-emerald-600 transition-colors leading-tight w-20 break-words line-clamp-2'>
+                </div>
+
+                {/* Category Name */}
+                <div className='p-1.5 md:p-2 text-center h-[30%] flex items-center justify-center'>
+                  <p className='text-[11px] md:text-xs font-bold text-gray-800 group-hover:text-emerald-600 transition-colors line-clamp-2'>
                     {cat.name}
                   </p>
-                </motion.div>
-              ))
-            )}
-          </div>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
 

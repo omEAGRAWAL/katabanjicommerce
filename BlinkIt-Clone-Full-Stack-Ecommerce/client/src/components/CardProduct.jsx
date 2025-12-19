@@ -36,24 +36,21 @@ const CardProduct = ({ data }) => {
 
       {/* Content Container */}
       <div className='p-2.5 flex flex-col gap-1.5 flex-1'>
-        {/* Delivery Time Badge */}
-        <div className='inline-flex items-center gap-0.5 rounded-full text-[9px] font-semibold px-1.5 py-0.5 text-emerald-700 bg-emerald-50 border border-emerald-200 w-fit'>
-          <span className='text-[9px]'>🕒</span>
-          <span>12 mins</span>
-        </div>
+
 
         {/* Product Name */}
-        <div className='font-semibold text-gray-900 text-xs line-clamp-2 leading-tight min-h-[2rem]'>
+        <div className='font-semibold text-gray-900 text-xs line-clamp-2'>
           {data.name}
         </div>
 
         {/* Unit */}
-        <div className='text-[10px] text-gray-500 font-medium'>
-          {data.unit}
-        </div>
+
 
         {/* Pricing Section */}
         <div className='flex items-center gap-1.5 mt-auto'>
+          <div className='text-[10px] text-gray-500 font-medium'>
+            {data.unit}
+          </div>
           <div className='font-bold text-sm text-gray-900'>
             {DisplayPriceInRupees(pricewithDiscount(data.price, data.discount))}
           </div>
