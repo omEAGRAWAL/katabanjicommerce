@@ -13,6 +13,10 @@ const SummaryApi = {
     url: "/api/user/google-login",
     method: "post",
   },
+  mobile_login: {
+    url: "/api/user/mobile-login",
+    method: "post",
+  },
   forgot_password: {
     url: "/api/user/forgot-password",
     method: "put",

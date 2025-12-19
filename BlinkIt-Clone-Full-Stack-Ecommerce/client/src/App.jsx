@@ -4,7 +4,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import BottomNavigation from "./components/BottomNavigation";
 import { Toaster } from "react-hot-toast";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import fetchUserDetails from "./utils/fetchUserDetails";
 import { setUserDetails } from "./store/userSlice";
 import {
@@ -12,7 +12,7 @@ import {
   setAllSubCategory,
   setLoadingCategory,
 } from "./store/productSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Axios from "./utils/Axios";
 import SummaryApi from "./common/SummaryApi";
 // import { handleAddItemCart } from "./store/cartProduct";
@@ -20,9 +20,13 @@ import GlobalProvider from "./provider/GlobalProvider";
 // import { FaCartShopping } from "react-icons/fa6";
 import CartMobileLink from "./components/CartMobile";
 import InstallAppButton from "./components/InstallAppButton";
+import LoginPromptModal from "./components/LoginPromptModal";
+
 function App() {
   const dispatch = useDispatch();
   const location = useLocation();
+  const user = useSelector((state) => state?.user);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
   const fetchUser = async () => {
     const userData = await fetchUserDetails();
@@ -80,12 +84,36 @@ function App() {
     // fetchCartItem()
   }, []);
 
+  // Show login prompt for non-logged in users after a delay
+  useEffect(() => {
+    // Don't show on login or register pages
+    if (location.pathname === '/login' || location.pathname === '/register') {
+      return;
+    }
+
+    // Check if user is not logged in
+    if (!user._id) {
+      // Show modal after 2 seconds delay
+      const timer = setTimeout(() => {
+        setShowLoginPrompt(true);
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [user, location.pathname]);
+
   return (
     <GlobalProvider>
       <Header />
       <main className="min-h-[78vh] pb-32 lg:pb-0">
         <Outlet />
       </main>
+
+      {/* Login Prompt Modal */}
+      <LoginPromptModal
+        isOpen={showLoginPrompt}
+        onClose={() => setShowLoginPrompt(false)}
+      />
 
       {/* <Toaster /> */}
       {/* {location.pathname !== "/checkout" && <CartMobileLink />} */}

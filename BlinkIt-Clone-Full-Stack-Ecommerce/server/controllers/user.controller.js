@@ -177,6 +177,105 @@ export async function googleLogin(request, response) {
     }
 }
 
+// Mobile Login Controller - Simple login with mobile number and name
+export async function mobileLoginController(request, response) {
+    try {
+        const { mobile, name } = request.body
+
+        // Validate input
+        if (!mobile || !name) {
+            return response.status(400).json({
+                message: "Please provide mobile number and name",
+                error: true,
+                success: false
+            })
+        }
+
+        // Validate mobile number format (10 digits)
+        const mobileRegex = /^[0-9]{10}$/
+        if (!mobileRegex.test(mobile)) {
+            return response.status(400).json({
+                message: "Please provide a valid 10-digit mobile number",
+                error: true,
+                success: false
+            })
+        }
+
+        // Check if user exists with this mobile number
+        let user = await UserModel.findOne({ mobile })
+
+        if (!user) {
+            // Create new user with mobile and name
+            const randomPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8)
+            const salt = await bcryptjs.genSalt(10)
+            const hashPassword = await bcryptjs.hash(randomPassword, salt)
+
+            const payload = {
+                name,
+                email: `${mobile}@mobile.app`, // Generate a unique email from mobile
+                mobile,
+                password: hashPassword,
+                verify_email: true, // Auto-verify for mobile login
+                status: "Active"
+            }
+
+            const newUser = new UserModel(payload)
+            user = await newUser.save()
+        } else {
+            // Update name if changed
+            if (user.name !== name) {
+                user.name = name
+                await user.save()
+            }
+        }
+
+        // Check user status
+        if (user.status !== "Active") {
+            return response.status(400).json({
+                message: "Contact Admin - Account is not active",
+                error: true,
+                success: false
+            })
+        }
+
+        // Generate tokens
+        const accesstoken = await generatedAccessToken(user._id)
+        const refreshToken = await genertedRefreshToken(user._id)
+
+        // Update last login date
+        await UserModel.findByIdAndUpdate(user._id, {
+            last_login_date: new Date()
+        })
+
+        // Set cookies
+        const cookiesOption = {
+            httpOnly: true,
+            secure: true,
+            sameSite: "None",
+            maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+        }
+        response.cookie('accessToken', accesstoken, cookiesOption)
+        response.cookie('refreshToken', refreshToken, cookiesOption)
+
+        return response.json({
+            message: "Login successful",
+            error: false,
+            success: true,
+            data: {
+                accesstoken,
+                refreshToken
+            }
+        })
+
+    } catch (error) {
+        return response.status(500).json({
+            message: error.message || error,
+            error: true,
+            success: false
+        })
+    }
+}
+
 //login controller
 export async function loginController(request, response) {
     try {

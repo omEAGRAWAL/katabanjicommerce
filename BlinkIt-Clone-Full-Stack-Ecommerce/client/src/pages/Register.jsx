@@ -1,3 +1,42 @@
+import React from 'react'
+import { Link } from 'react-router-dom'
+import { motion } from "framer-motion"
+
+const Register = () => {
+    return (
+        <section className='w-full container mx-auto px-4 flex items-center justify-center min-h-screen bg-white'>
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                className='w-full max-w-md text-center'
+            >
+                <div className="mb-8">
+                    <h2 className="text-3xl font-bold text-gray-900 mb-4">No Registration Required!</h2>
+                    <p className="text-gray-600 text-lg mb-6">
+                        Simply login with your mobile number and name to get started.
+                    </p>
+                    <p className="text-gray-500 text-sm mb-8">
+                        We've simplified the login process. Just enter your 10-digit mobile number and name - that's all you need!
+                    </p>
+                </div>
+
+                <Link
+                    to="/login"
+                    className="inline-block bg-primary-200 hover:bg-primary-100 text-white font-bold py-4 px-8 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5"
+                >
+                    Go to Login
+                </Link>
+            </motion.div>
+        </section>
+    )
+}
+
+export default Register
+
+
+/* ==================== OLD REGISTRATION CODE (COMMENTED OUT) ====================
+
 import React, { useState } from 'react'
 import { FaRegEyeSlash, FaRegEye, FaFacebook } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
@@ -241,3 +280,6 @@ const Register = () => {
 }
 
 export default Register
+
+==================== END OF OLD CODE ====================
+*/
