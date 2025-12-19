@@ -160,13 +160,13 @@ const Home = () => {
           </div>
 
           {/* Mobile Banner */}
-          {/* <div className='lg:hidden'>
+          <div className='lg:hidden'>
             <img
               src={banner}
               className='w-full h-[160px] object-cover'
               alt='banner'
             />
-          </div> */}
+          </div>
         </div>
       </div>
 
