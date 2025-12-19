@@ -203,10 +203,7 @@ const Home = () => {
                     className='w-full h-full object-contain group-hover:scale-110 transition-transform duration-300'
                     alt={cat.name}
                   />
-                  {/* "+X more" badge */}
-                  <div className='absolute top-1 left-1 bg-white/90 backdrop-blur-sm px-1.5 py-0.5 rounded-full text-[10px] md:text-xs font-semibold text-gray-700 shadow-sm'>
-                    +10 more
-                  </div>
+
                 </div>
 
                 {/* Category Name */}
