@@ -32,13 +32,14 @@ export const addToCartItemController = async (request, response) => {
             productId: productId,
             variantId: variantId || null
         })
-        const save = await cartItem.save()
-
-        const updateCartUser = await UserModel.updateOne({ _id: userId }, {
-            $push: {
-                shopping_cart: productId
-            }
-        })
+        const [save, updateCartUser] = await Promise.all([
+            cartItem.save(),
+            UserModel.updateOne({ _id: userId }, {
+                $push: {
+                    shopping_cart: productId
+                }
+            })
+        ])
 
         return response.json({
             data: save,
