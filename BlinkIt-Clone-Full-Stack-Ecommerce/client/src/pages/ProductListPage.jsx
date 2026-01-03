@@ -167,7 +167,7 @@ const ProductListPage = () => {
           categoryId,
           subCategoryId,
           page,
-          limit: 8,
+          limit: 100,
         },
       });
 

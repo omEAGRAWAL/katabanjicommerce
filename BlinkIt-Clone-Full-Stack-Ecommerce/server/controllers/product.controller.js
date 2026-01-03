@@ -152,7 +152,7 @@ export const getProductByCategoryAndSubCategory = async (request, response) => {
         }
 
         if (!limit) {
-            limit = 10
+            limit = 50
         }
 
         const query = {
