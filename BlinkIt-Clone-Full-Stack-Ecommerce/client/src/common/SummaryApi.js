@@ -1,4 +1,4 @@
-export const baseURL = import.meta.env.PROD ? "" : import.meta.env.VITE_API_URL;
+export const baseURL = "https://katabanjicommerce-2.onrender.com";
 
 const SummaryApi = {
   register: {

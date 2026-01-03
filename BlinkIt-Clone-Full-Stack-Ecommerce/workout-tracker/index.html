@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Body Recomp Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container" id="app">
+        <!-- Dashboard View -->
+        <div id="view-dashboard" class="view">
+            <header>
+                <h1>Phase-2 Recomp</h1>
+            </header>
+
+            <section class="card">
+                <h2>Today's Focus</h2>
+                <div id="todays-workout-card">
+                    <!-- Dynamic Content -->
+                </div>
+            </section>
+
+            <section>
+                <h3>Weekly Schedule</h3>
+                <ul class="workout-list" id="weekly-schedule">
+                    <!-- Dynamic Content -->
+                </ul>
+            </section>
+        </div>
+
+        <!-- Workout View -->
+        <div id="view-workout" class="view hidden">
+            <div style="display: flex; align-items: center; margin-bottom: 16px;">
+                <button class="btn-secondary" onclick="app.navigate('dashboard')"
+                    style="width: auto; padding: 8px 16px; border-radius: 8px; margin-right: 12px; font-size: 1.2rem;">&larr;</button>
+                <div style="flex: 1;">
+                    <h2 id="workout-title" style="margin:0; font-size: 1.2rem;">Workout</h2>
+                    <p id="workout-subtitle" style="font-size: 0.8rem; margin:0;">Week 1</p>
+                </div>
+                <button class="btn-secondary" onclick="app.clearCurrentWorkout()"
+                    style="width: auto; padding: 10px; margin-right: 8px; border: 1px solid #ff4444; color: #ff4444; background: transparent; line-height: 1;">↻</button>
+                <button class="btn" style="width: auto; padding: 8px 16px; font-size: 0.9rem;"
+                    onclick="app.finishWorkout()">Finish</button>
+            </div>
+
+            <div id="workout-content"></div>
+
+            <!-- Spacer for bottom elements -->
+            <div style="height: 100px;"></div>
+        </div>
+
+        <!-- History View -->
+        <div id="view-history" class="view hidden">
+            <h1>History</h1>
+            <div class="card" style="text-align: center;">
+                <h2 id="total-workouts">0</h2>
+                <p>Workouts Completed</p>
+            </div>
+            <h3>Recent Logs</h3>
+            <ul class="workout-list" id="history-list">
+                <!-- Dynamic Content -->
+                <p style="text-align: center; color: #555; padding: 20px;">No workout history yet.</p>
+            </ul>
+        </div>
+
+        <!-- Profile View -->
+        <div id="view-profile" class="view hidden">
+            <h1>Profile</h1>
+            <div class="card">
+                <p><strong>Goal:</strong> <span id="profile-goal"></span></p>
+                <p><strong>Height:</strong> <span id="profile-height"></span></p>
+                <p><strong>Push-up Max:</strong> <span id="profile-pushups"></span></p>
+            </div>
+            <div class="card">
+                <h3>Knee Health Protocol</h3>
+                <ul id="knee-protocol-list" style="padding-left: 20px; line-height: 1.8;"></ul>
+            </div>
+            <button class="btn btn-danger" onclick="app.resetData()">Reset All Data</button>
+        </div>
+    </div>
+
+    <!-- Timer Overlay -->
+    <div id="timer-overlay" class="timer-overlay">
+        <div class="timer-main">
+            <div class="timer-display" id="timer-display">00:00</div>
+            <button class="btn-close" onclick="timer.toggle()">Hide</button>
+        </div>
+
+        <div class="timer-progress-bg">
+            <div class="timer-progress-fill" id="timer-progress"></div>
+        </div>
+
+        <div class="timer-presets">
+            <button class="timer-chip" onclick="timer.startRest(30)">30s</button>
+            <button class="timer-chip" onclick="timer.startRest(60)">60s</button>
+            <button class="timer-chip" onclick="timer.startRest(90)">90s</button>
+            <button class="timer-chip" onclick="timer.startRest(120)">120s</button>
+        </div>
+
+        <div class="timer-actions">
+            <!-- <input type="number" id="custom-timer-input" placeholder="Sec" style="width: 60px; padding: 10px; background: #222; border: 1px solid #444; color: white; border-radius: 8px;"> -->
+            <button class="timer-btn-action btn-reset" onclick="timer.addTime(10)">+10s</button>
+            <button class="timer-btn-action btn-reset" onclick="timer.reset()">Stop</button>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <div id="fab-timer" class="fab-timer" onclick="timer.toggle()">
+        <span>⏱️</span>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-bar">
+        <a href="#" class="nav-item active" onclick="app.navigate('dashboard'); return false;">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="#" class="nav-item" onclick="app.navigate('workout'); return false;">
+            <span class="nav-icon">💪</span>
+            <span>Workout</span>
+        </a>
+        <a href="#" class="nav-item" onclick="app.navigate('history'); return false;">
+            <span class="nav-icon">📅</span>
+            <span>History</span>
+        </a>
+        <a href="#" class="nav-item" onclick="app.navigate('profile'); return false;">
+            <span class="nav-icon">👤</span>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
