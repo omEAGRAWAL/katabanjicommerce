@@ -20,9 +20,11 @@ const AddToCartButton = ({ data, variantId }) => {
         e.preventDefault()
         e.stopPropagation()
 
-        try {
-            setLoading(true)
+        // Optimistic Update
+        setIsAvailableCart(true)
+        setQty(1)
 
+        try {
             const response = await Axios({
                 ...SummaryApi.addTocart,
                 data: {
@@ -38,13 +40,17 @@ const AddToCartButton = ({ data, variantId }) => {
                 if (fetchCartItem) {
                     fetchCartItem()
                 }
+            } else {
+                // Revert on failure (if success false but no error throw)
+                setIsAvailableCart(false)
+                setQty(0)
             }
         } catch (error) {
+            // Revert on error
+            setIsAvailableCart(false)
+            setQty(0)
             AxiosToastError(error)
-        } finally {
-            setLoading(false)
         }
-
     }
 
     //checking this item in cart or not
@@ -68,23 +74,47 @@ const AddToCartButton = ({ data, variantId }) => {
         e.preventDefault()
         e.stopPropagation()
 
-        const response = await updateCartItem(cartItemDetails?._id, qty + 1)
+        // Optimistic
+        const prevQty = qty
+        setQty(prev => prev + 1)
+
+        const response = await updateCartItem(cartItemDetails?._id, prevQty + 1)
 
         if (response.success) {
             toast.success("Item added")
+        } else {
+            // Revert
+            setQty(prevQty)
         }
     }
 
     const decreaseQty = async (e) => {
         e.preventDefault()
         e.stopPropagation()
-        if (qty === 1) {
-            deleteCartItem(cartItemDetails?._id)
+
+        // Optimistic
+        const prevQty = qty
+        if (prevQty === 1) {
+            setIsAvailableCart(false)
+            setQty(0)
+
+            const response = await deleteCartItem(cartItemDetails?._id)
+            if (response.success) {
+                toast.success("Item remove")
+            } else {
+                // Revert
+                setIsAvailableCart(true)
+                setQty(1)
+            }
         } else {
-            const response = await updateCartItem(cartItemDetails?._id, qty - 1)
+            setQty(prev => prev - 1)
+            const response = await updateCartItem(cartItemDetails?._id, prevQty - 1)
 
             if (response.success) {
                 toast.success("Item remove")
+            } else {
+                // Revert
+                setQty(prevQty)
             }
         }
     }
@@ -101,7 +131,7 @@ const AddToCartButton = ({ data, variantId }) => {
                     </div>
                 ) : (
                     <button onClick={handleADDTocart} className='bg-white hover:bg-green-50 text-green-600 border border-green-600 px-4 py-1.5 rounded-lg text-sm font-bold w-fit min-w-[80px] transition-colors uppercase tracking-wide'>
-                        {loading ? <Loading /> : "Add"}
+                        {false ? <Loading /> : "Add"}
                     </button>
                 )
             }

@@ -66,8 +66,8 @@ const DisplayCartItem = ({ close, isPage }) => {
                                                 }
 
                                                 return (
-                                                    <div key={item?._id + "cartItemDisplay"} className='flex w-full gap-3 p-3 border-b last:border-b-0'>
-                                                        <div className='w-16 h-16 shrink-0 bg-gray-50 border rounded-lg flex items-center justify-center p-1'>
+                                                    <div key={item?._id + "cartItemDisplay"} className='flex w-full gap-2 p-2 border-b last:border-b-0'>
+                                                        <div className='w-12 h-12 shrink-0 bg-gray-50 border rounded-lg flex items-center justify-center p-1'>
                                                             <img
                                                                 src={item?.productId?.image[0]}
                                                                 className='w-full h-full object-contain'
@@ -76,9 +76,9 @@ const DisplayCartItem = ({ close, isPage }) => {
                                                         <div className='w-full flex flex-col justify-between'>
                                                             <div>
                                                                 <p className='text-sm font-medium text-gray-800 line-clamp-2 leading-tight'>{displayName}</p>
-                                                                <p className='text-xs text-gray-500 mt-0.5'>{item?.productId?.unit}</p>
+                                                                <p className='text-[10px] text-gray-500 mt-0.5'>{item?.productId?.unit}</p>
                                                             </div>
-                                                            <div className='flex items-center justify-between mt-2'>
+                                                            <div className='flex items-center justify-between mt-1'>
                                                                 <div className='flex items-center gap-2'>
                                                                     <p className='font-bold text-sm text-gray-900'>{DisplayPriceInRupees(pricewithDiscount(displayPrice, displayDiscount))}</p>
                                                                     {Boolean(displayDiscount) && (
